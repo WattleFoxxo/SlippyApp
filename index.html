@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en-au" class="mdui-theme-dark">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"/>
+        <meta name="renderer" content="webkit"/>
+
+        <title>Hello, world!</title>
+
+        <!-- Material Design UI -->
+        <link rel="stylesheet" href="https://unpkg.com/mdui@2/mdui.css">
+        <script src="https://unpkg.com/mdui@2/mdui.global.js"></script>
+
+        <!-- Icons -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone" rel="stylesheet">
+
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+        <script src="/js/libs/meshtastic.js"></script>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body>
+        <mdui-layout full-height>
+            <mdui-top-app-bar>
+                <mdui-top-app-bar-title id="navbar-title">Nodes</mdui-top-app-bar-title>
+                <div style="flex-grow: 1"></div>
+                <mdui-dropdown>
+                    <mdui-button-icon icon="more_vert" slot="trigger"></mdui-button-icon>
+                    <mdui-menu>
+                        <mdui-menu-item onclick="connectToHttp()">Connect to "192.168.0.58"</mdui-menu-item>
+                        <mdui-menu-item onclick="populateNodeList()">Funny button</mdui-menu-item>
+                    </mdui-menu>
+                  </mdui-dropdown>
+            </mdui-top-app-bar>
+
+            <mdui-navigation-bar id="navbar" value="nodes">
+                <mdui-navigation-bar-item icon="workspaces" value="nodes">Nodes</mdui-navigation-bar-item>
+                <mdui-navigation-bar-item icon="map" value="maps">Maps</mdui-navigation-bar-item>
+                <mdui-navigation-bar-item icon="apps" value="apps">Apps</mdui-navigation-bar-item>
+            </mdui-navigation-bar>
+
+            <mdui-layout-main>
+                <div class="app-page" id="app-page-nodes" tab_name="Nodes">
+                    <mdui-list id="nodes/nodelist">
+                        <!-- <mdui-list-item icon="people" end-icon="arrow_right" fab-detach>
+                            Wah <mdui-badge>WAH</mdui-badge>
+                            <br>
+                            <span class="nodes-nodelistitemdescription">
+                                <i class="material-icons nodes-nodelistitemdescription">battery_full</i>100%
+                                &nbsp;
+                                <i class="material-icons nodes-nodelistitemdescription">location_on</i> <a href="">-35.37195 149.07490</a>
+                                &nbsp;
+                                <i class="material-icons nodes-nodelistitemdescription">schedule</i> now
+                            </span>
+                        </mdui-list-item> -->
+                    </mdui-list>
+                </div>
+
+                <div class="app-page" id="app-page-maps" tab_name="Maps" hidden>
+                    <div id="map" style="height: 100%;"></div>
+                </div>
+            </mdui-layout-main>
+        </mdui-layout>
+
+        <script src="/js/device.js"></script>
+        <script src="/js/subscribe.js"></script>
+        <script src="/js/mesh.js"></script>
+        <script src="/js/index.js"></script>
+    </body>
+</html>
