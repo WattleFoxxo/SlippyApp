@@ -12,3 +12,13 @@ body {
     line-height: var(--mdui-typescale-body-medium-line-height);
     vertical-align: middle;
 }
+
+.app-page {
+    height: 100%;
+}
+
+.flexcontainer {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+}

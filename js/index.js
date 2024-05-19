@@ -1,60 +1,26 @@
-const mdui = globalThis.mdui;
+import { Device } from "./modules/device.js";
+import "./modules/ui/index.js";
 
-// TODO: Move
-function scale(number, inMin, inMax, outMin, outMax) {
-    return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-}
+export const currentDevice = new Device(0);
 
-function clamp(num, lower, upper) {
-    return Math.min(Math.max(num, lower), upper);
-}
+// const meshtastic = require("Meshtastic");
+// const subscription_manager = require("SubscriptionManager");
 
-function populateNodeList() {
-    myDevice.nodes.forEach((node) => {
-        try {
-            var longName = node.user.longName;
-            var shortName = node.user.shortName;
-            
-            var latitude;
-            var longitude;
-            var locationEnabled = (node.position !== undefined);
+// console.log(subscription_manager);
 
-            if (locationEnabled) {
-                latitude = (node.position.latitudeI / 10000000).toFixed(3);
-                longitude = (node.position.longitudeI / 10000000).toFixed(3);
-            }
-            
-            var batteryLevel;
-            var batteryIcon;
-            var hasDeviceMetrics = (node.deviceMetrics !== undefined);
-
-            if (hasDeviceMetrics) {
-                var batteryIcons = ["battery_0_bar", "battery_1_bar", "battery_2_bar", "battery_3_bar", "battery_4_bar", "battery_5_bar", "battery_6_bar", "battery_full"];
-                batteryLevel = clamp(node.deviceMetrics.batteryLevel, 0, 100);
-                batteryIcon = batteryIcons[Math.round(scale(batteryLevel, 0, 100, 0, 7))];
-            }
+// subscription_manager.test();
+// const devices = 
 
 
-            
-            // TODO: Prevent XSS
-            var template = document.createElement("template");
-            template.innerHTML = `
-            <mdui-list-item icon="people" end-icon="arrow_right" fab-detach>
-                ${longName} <mdui-badge style="vertical-align: middle;">${shortName}</mdui-badge>
-                <br>
-                <span class="nodes-nodelistitemdescription">
-                    <i class="material-icons nodes-nodelistitemdescription">${hasDeviceMetrics ? batteryIcon : "battery_unknown"}</i>${hasDeviceMetrics ? `${batteryLevel}%` : ""}
-                    &nbsp;
-                    <i class="material-icons nodes-nodelistitemdescription">${locationEnabled ? "location_on" : "location_off"}</i>${locationEnabled ? ` <a href=\"\">${latitude} ${latitude}</a>:` : ""}
-                    &nbsp;
-                    <i class="material-icons nodes-nodelistitemdescription">schedule</i> now
-                </span>
-            </mdui-list-item>
-            `;
+// const connection = client.createHttpConnection(0);
 
-            document.getElementById("nodes/nodelist").appendChild(template.content.cloneNode(true))
-        } catch (e) {
-            console.log("Faild to parse node: ", e);
-        }
-    });
-}
+// const devices = [ new Device(0) ]
+
+// async function connectToHttp() {
+//     await connection.connect({
+//         address: "192.168.0.58",
+//         fetchInterval: 3000
+//     });
+
+//     subscribeToAll();
+// }

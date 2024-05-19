@@ -8,8 +8,8 @@
         <title>Hello, world!</title>
 
         <!-- Material Design UI -->
-        <link rel="stylesheet" href="https://unpkg.com/mdui@2/mdui.css">
-        <script src="https://unpkg.com/mdui@2/mdui.global.js"></script>
+        <link rel="stylesheet" href="/css/mdui.css">
+        <script src="/js/libs/mdui.js"></script>
 
         <!-- Icons -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -17,26 +17,33 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone" rel="stylesheet">
-
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
+        <!-- Libraries -->
         <script src="/js/libs/meshtastic.js"></script>
+        <script src="/js/libs/pnglib.js"></script>
+        <script src="/js/libs/identicon.js"></script>
+        <script src="/js/libs/crypto-js.min.js"></script>
+        <script src="/js/libs/require.js"></script>
+
+        <!-- Styles -->
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
         <mdui-layout full-height>
             <mdui-top-app-bar>
+                <!-- <mdui-button-icon icon="arrow_back"></mdui-button-icon> -->
                 <mdui-top-app-bar-title id="navbar-title">Nodes</mdui-top-app-bar-title>
                 <div style="flex-grow: 1"></div>
                 <mdui-dropdown>
                     <mdui-button-icon icon="more_vert" slot="trigger"></mdui-button-icon>
-                    <mdui-menu>
-                        <mdui-menu-item onclick="connectToHttp()">Connect to "192.168.0.58"</mdui-menu-item>
-                        <mdui-menu-item onclick="populateNodeList()">Funny button</mdui-menu-item>
-                    </mdui-menu>
-                  </mdui-dropdown>
+                        <mdui-menu>
+                            <mdui-menu-item id="topbar/connect">Connect</mdui-menu-item>
+                        </mdui-menu>
+                    </mdui-dropdown>
             </mdui-top-app-bar>
 
+            <!-- hide style="height: 0px;" -->
             <mdui-navigation-bar id="navbar" value="nodes">
                 <mdui-navigation-bar-item icon="workspaces" value="nodes">Nodes</mdui-navigation-bar-item>
                 <mdui-navigation-bar-item icon="map" value="maps">Maps</mdui-navigation-bar-item>
@@ -45,30 +52,30 @@
 
             <mdui-layout-main>
                 <div class="app-page" id="app-page-nodes" tab_name="Nodes">
-                    <mdui-list id="nodes/nodelist">
-                        <!-- <mdui-list-item icon="people" end-icon="arrow_right" fab-detach>
-                            Wah <mdui-badge>WAH</mdui-badge>
-                            <br>
-                            <span class="nodes-nodelistitemdescription">
-                                <i class="material-icons nodes-nodelistitemdescription">battery_full</i>100%
-                                &nbsp;
-                                <i class="material-icons nodes-nodelistitemdescription">location_on</i> <a href="">-35.37195 149.07490</a>
-                                &nbsp;
-                                <i class="material-icons nodes-nodelistitemdescription">schedule</i> now
-                            </span>
-                        </mdui-list-item> -->
-                    </mdui-list>
+                    <div id="nodes/nodelist">
+                        <mdui-list id="nodes/nodelist/list"></mdui-list>
+                    </div>
+                    
+                    <div id="nodes/message" hidden>
+                        <div class="flexcontainer">
+                            <div style="flex: 1; overflow: scroll;">
+                                <mdui-list id="nodes/message/messagelist/list">
+                                </mdui-list>
+                            </div>
+
+                            <div style='padding: 10px;'>
+                                <mdui-text-field variant="outlined"  label="Message WattleFoxxo"></mdui-text-field>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="app-page" id="app-page-maps" tab_name="Maps" hidden>
                     <div id="map" style="height: 100%;"></div>
                 </div>
             </mdui-layout-main>
-        </mdui-layout>
+        </mdui-layout>     
 
-        <script src="/js/device.js"></script>
-        <script src="/js/subscribe.js"></script>
-        <script src="/js/mesh.js"></script>
-        <script src="/js/index.js"></script>
+        <script type="module" src="/js/index.js"></script>
     </body>
 </html>
