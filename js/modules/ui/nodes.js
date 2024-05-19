@@ -1,6 +1,4 @@
-
-const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
-const scale = (number, inMin, inMax, outMin, outMax) => ((number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin);
+import {clamp, scale, XSSEncode} from "../utils.js";
 
 export function loadNodes(device) {
     document.getElementById("nodes/nodelist").innerHTML = "";
@@ -8,43 +6,43 @@ export function loadNodes(device) {
     Object.entries(device.nodes).forEach(([id, node]) => {
 
         try {
-            var hasUser = ("user" in node);
-            var hasLocation = ("position" in node);
-            var hasDeviceMetrics = ("deviceMetrics" in node);
+            let hasUser = ("user" in node);
+            let hasLocation = ("position" in node);
+            let hasDeviceMetrics = ("deviceMetrics" in node);
 
-            var longName = `!${id.toString(16)}`;
-            var shortName = "UNK";
+            let longName = `!${id.toString(16)}`;
+            let shortName = "UNK";
 
             if (hasUser) {
-                longName = node.user.longName;
-                shortName = node.user.shortName;
+                longName = XSSEncode(node.user.longName);
+                shortName = XSSEncode(node.user.shortName);
             }
 
-            var locationString = "";
-            var locationIcon = "location_off";
+            let locationString = "";
+            let locationIcon = "location_off";
 
             if (hasLocation) {
-                var latitude = (node.position.latitudeI / 10000000);
-                var longitude = (node.position.longitudeI / 10000000);
+                let latitude = XSSEncode((node.position.latitudeI / 10000000));
+                let longitude = XSSEncode((node.position.longitudeI / 10000000));
 
                 locationString = ` <a href=\"\">${latitude} ${longitude}</a>`;
                 locationIcon = ("location_on");
             }
             
-            var batteryString = "";
-            var batteryIcon = "battery_unknown";
+            let batteryString = "";
+            let batteryIcon = "battery_unknown";
 
             if (hasDeviceMetrics) {
-                var batteryIcons = ["battery_0_bar", "battery_1_bar", "battery_2_bar", "battery_3_bar", "battery_4_bar", "battery_5_bar", "battery_6_bar", "battery_full"];
+                let batteryIcons = ["battery_0_bar", "battery_1_bar", "battery_2_bar", "battery_3_bar", "battery_4_bar", "battery_5_bar", "battery_6_bar", "battery_full"];
                 
-                var batteryLevel = clamp(node.deviceMetrics.batteryLevel, 0, 100);
+                let batteryLevel = XSSEncode(clamp(node.deviceMetrics.batteryLevel, 0, 100));
                 
                 batteryString = `${batteryLevel}%`;
                 batteryIcon = batteryIcons[Math.round(scale(batteryLevel, 0, 100, 0, 7))];
             }
             
             // TODO: Prevent XSS
-            var template = document.createElement("template");
+            let template = document.createElement("template");
             template.innerHTML = `
             <mdui-list-item icon="people" end-icon="arrow_right" fab-detach>
                 ${longName} <mdui-badge style="vertical-align: middle;">${shortName}</mdui-badge>
