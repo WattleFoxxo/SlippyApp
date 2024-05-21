@@ -13,6 +13,10 @@ document.getElementById("connect").addEventListener("click", () => {
         description: "enter the hostname of the device",
         confirmText: "Connect",
         cancelText: "Cancel",
+        textFieldOptions: {
+            value: "meshtastic.local"
+        },
+
         onConfirm: (host) => currentDevice.connectHttp(host),
         onCancel: () => console.log("Canceled"),
     });
@@ -27,3 +31,4 @@ document.getElementById("refresh").addEventListener("click", () => {
 });
 
 window.location.hash = "#nodes";
+refreshPage();
