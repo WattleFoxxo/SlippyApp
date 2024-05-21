@@ -31,55 +31,28 @@
     </head>
     <body>
         <mdui-layout full-height>
-            <mdui-top-app-bar>
-                <!-- <mdui-button-icon icon="arrow_back"></mdui-button-icon> -->
+            <mdui-top-app-bar id="topbar">
+                <mdui-button-icon id="topbar/backButton" icon="arrow_back"></mdui-button-icon>
                 <mdui-top-app-bar-title id="topbar/title">Nodes</mdui-top-app-bar-title>
                 <div style="flex-grow: 1"></div>
                 <mdui-dropdown>
                     <mdui-button-icon icon="more_vert" slot="trigger"></mdui-button-icon>
-                        <mdui-menu>
-                            <mdui-menu-item id="topbar/connect">Connect</mdui-menu-item>
-                        </mdui-menu>
-                    </mdui-dropdown>
+                    <mdui-menu>
+                        <mdui-menu-item id="connect">Connect</mdui-menu-item>
+                        <mdui-menu-item id="refresh">Refresh</mdui-menu-item>
+                    </mdui-menu>
+                </mdui-dropdown>
             </mdui-top-app-bar>
 
-            <!-- hide style="height: 0px;" -->
             <mdui-navigation-bar id="navbar" value="nodes">
-                <mdui-navigation-bar-item icon="workspaces" value="nodes">Nodes</mdui-navigation-bar-item>
-                <mdui-navigation-bar-item icon="chat_bubble_outline" value="channels">Channels</mdui-navigation-bar-item>
-                <mdui-navigation-bar-item icon="map" value="maps">Maps</mdui-navigation-bar-item>
+                <mdui-navigation-bar-item icon="workspaces" href="#nodes" value="nodes">Nodes</mdui-navigation-bar-item>
+                <mdui-navigation-bar-item icon="chat_bubble_outline" href="#channels" value="channels">Channels</mdui-navigation-bar-item>
+                <mdui-navigation-bar-item icon="map" href="#maps" value="maps">Maps</mdui-navigation-bar-item>
             </mdui-navigation-bar>
 
-            <mdui-layout-main>
-                <div class="app-page" id="nodes" name="Nodes" hide_navbar="false">
-                    <div id="nodes/nodelist">
-                        <mdui-list id="nodes/nodelist/list"></mdui-list>
-                    </div>
-                    
-                    <div id="nodes/message" hidden>
-                        <div class="flexcontainer">
-                            <div style="flex: 1; overflow: scroll;">
-                                <mdui-list id="nodes/message/messagelist/list">
-                                </mdui-list>
-                            </div>
+            <mdui-layout-main id="content"></mdui-layout-main>
 
-                            <div style='padding: 10px;'>
-                                <mdui-text-field variant="outlined"  label="Message WattleFoxxo"></mdui-text-field>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-
-                <div class="app-page" id="channels" name="Channels" hide_navbar="false" hidden>
-                    <h2>Channels tab isnt implemented!</h2>
-                </div>
-
-                <div class="app-page" id="maps" name="Maps" hide_navbar="false" hidden>
-                    <h2>Maps tab isnt implemented!</h2>
-                </div>
-            </mdui-layout-main>
-        </mdui-layout>     
+        </mdui-layout>
 
         <script type="module" src="/js/index.js"></script>
     </body>

@@ -1,16 +1,19 @@
-import {clamp, scale, XSSEncode} from "../utils.js";
+import { clamp, scale, XSSEncode } from "../utils.js";
+import { registerScript } from "../router.js";
 
-export function loadNodes(device) {
-    document.getElementById("nodes/nodelist").innerHTML = "";
+import { currentDevice } from "../../index.js";
 
-    Object.entries(device.nodes).forEach(([id, node]) => {
+function loadNodes(device) {
+    document.getElementById("nodeList").innerHTML = "";
+
+    Object.entries(device.nodes).forEach(([userId, node]) => {
 
         try {
             let hasUser = ("user" in node);
             let hasLocation = ("position" in node);
             let hasDeviceMetrics = ("deviceMetrics" in node);
 
-            let longName = `!${id.toString(16)}`;
+            let longName = `!${userId.toString(16)}`;
             let shortName = "UNK";
 
             if (hasUser) {
@@ -25,7 +28,7 @@ export function loadNodes(device) {
                 let latitude = XSSEncode((node.position.latitudeI / 10000000));
                 let longitude = XSSEncode((node.position.longitudeI / 10000000));
 
-                locationString = ` <a href=\"\">${latitude} ${longitude}</a>`;
+                locationString = ` <a href="">${latitude} ${longitude}</a>`;
                 locationIcon = ("location_on");
             }
             
@@ -41,10 +44,9 @@ export function loadNodes(device) {
                 batteryIcon = batteryIcons[Math.round(scale(batteryLevel, 0, 100, 0, 7))];
             }
             
-            // TODO: Prevent XSS
             let template = document.createElement("template");
             template.innerHTML = `
-            <mdui-list-item icon="people" end-icon="arrow_right" fab-detach>
+            <mdui-list-item icon="people" end-icon="arrow_right" href="#message?channel=${userId}" fab-detach>
                 ${longName} <mdui-badge style="vertical-align: middle;">${shortName}</mdui-badge>
                 <span slot="description">
                     <span style="white-space: nowrap"><i class="material-icons nodes-nodelistitemdescription">${batteryIcon}</i>${batteryString}</span>
@@ -56,9 +58,15 @@ export function loadNodes(device) {
             </mdui-list-item>
             `;
     
-            document.getElementById("nodes/nodelist").appendChild(template.content.cloneNode(true))
+            document.getElementById("nodeList").appendChild(template.content.cloneNode(true))
         } catch (e) {
             console.log("Faild to parse node: ", e);
         }
     });
 }
+
+export function init() {
+    loadNodes(currentDevice);
+}
+
+registerScript("nodes", init);

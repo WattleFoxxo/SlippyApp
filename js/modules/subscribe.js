@@ -1,4 +1,5 @@
-import * as nodes from "./ui/nodes.js";
+// import * as nodes from "./ui/nodes.js";
+import { refreshPage } from "../index.js";
 
 export function toAll(device) {
     device.connection.events.onAtakForwarderPacket.subscribe((data) => {
@@ -59,7 +60,12 @@ export function toAll(device) {
 
     device.connection.events.onMessagePacket.subscribe((data) => {
         console.log("onMessagePacket:", data);
-        addMessage(data);
+
+        if (!(data.from in device.messages)) device.messages[data.from] = [];
+
+        device.messages[data.from].push(data);
+
+        refreshPage();
     });
 
     device.connection.events.onModuleConfigPacket.subscribe((data) => {
@@ -78,7 +84,8 @@ export function toAll(device) {
     device.connection.events.onNodeInfoPacket.subscribe((data) => {
         console.log("onNodeInfoPacket:", data);
         device.nodes[data.num] = data;
-        nodes.loadNodes(device);
+        // nodes.loadNodes(device);
+        refreshPage();
     });
 
     device.connection.events.onPaxcounterPacket.subscribe((data) => {

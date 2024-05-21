@@ -10,6 +10,8 @@ export class Device {
         this.myNodeNumb = 0;
         this.nodes = {};
         this.channels = {};
+
+        this.messages = {};
     }
 
     async connectHttp(address, fetchInterval=3000, receiveBatchRequests=false, tls=false) {
@@ -23,5 +25,9 @@ export class Device {
         });
 
         subscribe.toAll(this);
-    }x
+    }
+
+    sendMessage(destination, message) {
+        this.connection.sendText(message, destination);
+    }
 }
