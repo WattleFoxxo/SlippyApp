@@ -27,7 +27,7 @@ function manageUi() {
 
 async function fetchContent(filePath) {
     try {
-        let response = await fetch(`routes/${filePath}`);
+        let response = await fetch(`./routes/${filePath}`);
         if (!response.ok) {
             throw new Error("Failed to fetch HTML content");
         }
