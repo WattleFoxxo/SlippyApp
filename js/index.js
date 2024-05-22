@@ -10,7 +10,7 @@ export let currentDevice = new Device(0);
 document.getElementById("connect").addEventListener("click", () => {
     mdui.prompt({
         headline: "Connect to HTTP device",
-        description: "enter the hostname of the device",
+        description: "enter the hostname of the device.",
         confirmText: "Connect",
         cancelText: "Cancel",
         textFieldOptions: {
