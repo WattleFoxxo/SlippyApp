@@ -11,7 +11,10 @@ export function toAll(device) {
     });
 
     device.connection.events.onChannelPacket.subscribe((data) => {
-        // console.log("onChannelPacket:", data);
+        console.log("onChannelPacket:", data);
+        device.channels[data.index] = data;
+
+        refreshPage();
     });
 
     device.connection.events.onConfigPacket.subscribe((data) => {
@@ -62,7 +65,6 @@ export function toAll(device) {
         console.log("onMessagePacket:", data);
 
         if (!(data.from in device.messages)) device.messages[data.from] = [];
-
         device.messages[data.from].push(data);
 
         refreshPage();
@@ -84,7 +86,7 @@ export function toAll(device) {
     device.connection.events.onNodeInfoPacket.subscribe((data) => {
         console.log("onNodeInfoPacket:", data);
         device.nodes[data.num] = data;
-        // nodes.loadNodes(device);
+
         refreshPage();
     });
 

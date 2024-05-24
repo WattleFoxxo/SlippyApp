@@ -4,6 +4,7 @@ import { Device } from "./modules/device.js";
 /* Routes */
 import "./modules/routes/nodes.js"
 import "./modules/routes/message.js"
+import "./modules/routes/channels.js"
 
 export let currentDevice = new Device(0);
 
