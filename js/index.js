@@ -9,9 +9,27 @@ import "./modules/routes/maps.js"
 
 export let currentDevice = new Device(0);
 
-function checkval(value) {
-
-}
+window.addEventListener("load", (event) => {
+    if (location.protocol === "https:" && !checkCookie("ignore-https-warn")) {
+        mdui.dialog({
+            headline: "Hold up!",
+            body: `
+            <span>It looks like you're using a secure connection.<br>
+            This might cause issues if your node doesn't have TLS enabled.<br><br>
+            Learn more about that <a href="https://github.com/WattleFoxxo/SlippyApp/blob/main/README.md">here</a>.<span>
+            `,
+            actions: [
+                {
+                    text: "Don't show again",
+                    onClick: () => setCookie("ignore-https-warn", true, 256),
+                },
+                {
+                    text: "Acknowledge"
+                }
+            ]
+        });
+    }
+});
 
 document.getElementById("connect").addEventListener("click", () => {
     mdui.prompt({
