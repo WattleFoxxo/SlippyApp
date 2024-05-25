@@ -1,0 +1,9 @@
+{
+    "name": "Slippy",
+    "start_url": "/#nodes",
+    "icons": [],
+    "theme_color": "#000000",
+    "background_color": "#ffffff",
+    "display": "fullscreen",
+    "orientation": "portrait"
+}
