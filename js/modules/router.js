@@ -5,10 +5,15 @@ const routes = {
     "message": "message.html",
 };
 
+let currentRoute = "";
+
 const scripts = {};
 
-export function registerScript(route, init) {
-    scripts[route] = init;
+export function registerScript(route, init, refresh) {
+    scripts[route] = {
+        "init": init,
+        "refresh": refresh
+    };
 }
 
 function manageUi() {
@@ -40,6 +45,10 @@ async function fetchContent(filePath) {
     }
 }
 
+export function refresh() {
+    if (currentRoute in scripts) scripts[currentRoute].refresh();
+}
+
 export async function navigateTo(route) {
     let filePath = routes[route];
     if (!filePath) {
@@ -53,10 +62,12 @@ export async function navigateTo(route) {
 
     manageUi();
 
+    currentRoute = route;
+
     console.log("Loading:", route);
     console.log("in scripts:", scripts);
 
-    if (route in scripts) scripts[route]();
+    if (route in scripts) scripts[route].init();
 }
 
 window.addEventListener("hashchange", (event) => {

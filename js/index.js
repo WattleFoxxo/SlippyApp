@@ -1,10 +1,11 @@
-import { navigateTo } from "./modules/router.js";
+import { navigateTo, refresh } from "./modules/router.js";
 import { Device } from "./modules/device.js";
 
 /* Routes */
 import "./modules/routes/nodes.js"
 import "./modules/routes/message.js"
 import "./modules/routes/channels.js"
+import "./modules/routes/maps.js"
 
 export let currentDevice = new Device(0);
 
@@ -24,12 +25,13 @@ document.getElementById("connect").addEventListener("click", () => {
 });
 
 export function refreshPage() {
-    navigateTo(window.location.hash.slice(1).split("?")[0]);
+    refresh();
 }
 
 document.getElementById("refresh").addEventListener("click", () => {
+    console.log(currentDevice);
     refreshPage();
 });
 
 window.location.hash = "#nodes";
-refreshPage();
+navigateTo(window.location.hash.slice(1).split("?")[0]);

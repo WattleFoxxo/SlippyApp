@@ -10,6 +10,7 @@ export class Device {
         this.myNodeNumb = 0;
         this.nodes = {};
         this.channels = {};
+        this.nodePositions = {};
 
         this.messages = {};
     }

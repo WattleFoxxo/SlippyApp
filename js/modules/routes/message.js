@@ -74,7 +74,11 @@ export function init() {
     console.log(currentDevice.messages);
 
     loadMessages(params);
-    
 }
 
-registerScript("message", init);
+export function refresh() {
+    var params = new URLSearchParams(`?${window.location.hash.split("?")[1]}`)
+    loadMessages(params);
+}
+
+registerScript("message", init, refresh);

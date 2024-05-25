@@ -31,4 +31,8 @@ export function init() {
     loadNodes(currentDevice);
 }
 
-registerScript("channels", init);
+export function refresh() {
+    loadNodes(currentDevice);
+}
+
+registerScript("channels", init, refresh);

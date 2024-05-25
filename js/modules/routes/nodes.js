@@ -25,8 +25,8 @@ function loadNodes(device) {
             let locationIcon = "location_off";
 
             if (hasLocation) {
-                let latitude = XSSEncode((node.position.latitudeI / 10000000));
-                let longitude = XSSEncode((node.position.longitudeI / 10000000));
+                let latitude = XSSEncode((parseInt(node.position.latitudeI) * 0.0000001).toFixed(5));
+                let longitude = XSSEncode((parseInt(node.position.longitudeI) * 0.0000001).toFixed(5));
 
                 locationString = ` <a href="">${latitude} ${longitude}</a>`;
                 locationIcon = ("location_on");
@@ -46,7 +46,7 @@ function loadNodes(device) {
             
             let template = document.createElement("template");
             template.innerHTML = `
-            <mdui-list-item icon="people" end-icon="arrow_right" href="#message?channel=${userId}" fab-detach>
+            <mdui-list-item icon="person" end-icon="arrow_right" href="#message?channel=${userId}" fab-detach>
                 ${longName} <mdui-badge style="vertical-align: middle;">${shortName}</mdui-badge>
                 <span slot="description">
                     <span style="white-space: nowrap"><i class="material-icons nodes-nodelistitemdescription">${batteryIcon}</i>${batteryString}</span>
@@ -69,4 +69,8 @@ export function init() {
     loadNodes(currentDevice);
 }
 
-registerScript("nodes", init);
+export function refresh() {
+    loadNodes(currentDevice);
+}
+
+registerScript("nodes", init, refresh);

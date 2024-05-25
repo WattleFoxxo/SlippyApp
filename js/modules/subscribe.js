@@ -103,7 +103,10 @@ export function toAll(device) {
     });
 
     device.connection.events.onPositionPacket.subscribe((data) => {
-        // console.log("onPositionPacket:", data);
+        console.log("onPositionPacket:", data);
+        device.nodes[data.from].position = data.data;
+
+        refreshPage();
     });
 
     device.connection.events.onPrivatePacket.subscribe((data) => {
