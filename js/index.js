@@ -9,17 +9,23 @@ import "./modules/routes/maps.js"
 
 export let currentDevice = new Device(0);
 
+function checkval(value) {
+
+}
+
 document.getElementById("connect").addEventListener("click", () => {
     mdui.prompt({
-        headline: "Connect to HTTP device",
+        headline: "Connect to device",
         description: "enter the hostname of the device.",
         confirmText: "Connect",
         cancelText: "Cancel",
         textFieldOptions: {
-            value: "meshtastic.local"
+            value: "http://meshtastic.local",
+            required: true,
+            inputmode: "url",
+            checkValidity: true,            
         },
-
-        onConfirm: (host) => currentDevice.connectHttp(host),
+        onConfirm: (host) => currentDevice.connectHttp(host.replace(/^https?:\/\//, ""), 3000, false, host.startsWith("https")),
         onCancel: () => console.log("Canceled"),
     });
 });
