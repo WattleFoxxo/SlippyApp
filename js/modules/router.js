@@ -45,6 +45,10 @@ async function fetchContent(filePath) {
     }
 }
 
+export function setTitle(title) {
+    document.getElementById("topbar/title").innerText = title;
+}
+
 export function refresh() {
     if (currentRoute in scripts) scripts[currentRoute].refresh();
 }
