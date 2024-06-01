@@ -57,5 +57,13 @@ document.getElementById("refresh").addEventListener("click", () => {
     refreshPage();
 });
 
+document.getElementById("about").addEventListener("click", () => {
+    mdui.alert({
+        headline: "About Slippy",
+        description: "Created by Wattlefox, Woobie and lockness Ko",
+        confirmText: "Ok",
+    });
+});
+
 window.location.hash = "#nodes";
 navigateTo(window.location.hash.slice(1).split("?")[0]);
