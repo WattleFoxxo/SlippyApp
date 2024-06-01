@@ -43,7 +43,10 @@ document.getElementById("connect").addEventListener("click", () => {
             inputmode: "url",
             checkValidity: true,            
         },
-        onConfirm: (host) => currentDevice.connectHttp(host.replace(/^https?:\/\//, ""), 3000, false, host.startsWith("https")),
+        onConfirm: (host) => {
+            currentDevice.connectHttp(host.replace(/^https?:\/\//, ""), 3000, false, host.startsWith("https"));
+            console.log(currentDevice);
+        },
         onCancel: () => console.log("Canceled"),
     });
 });
@@ -58,6 +61,7 @@ document.getElementById("refresh").addEventListener("click", () => {
 });
 
 document.getElementById("about").addEventListener("click", () => {
+    console.log(currentDevice);
     mdui.alert({
         headline: "About Slippy",
         description: "Created by Wattlefox, Woobie and lockness Ko",
