@@ -7,6 +7,9 @@ let map;
 
 let markers = [];
 
+/**
+ * @param {import('../device.js').Device} device 
+ */
 function loadNodes(device, map) {
 
     markers.forEach((marker) => {
