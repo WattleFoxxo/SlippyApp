@@ -41,7 +41,7 @@ document.getElementById("connect").addEventListener("click", () => {
             value: "http://meshtastic.local",
             required: true,
             inputmode: "url",
-            checkValidity: true,            
+            checkValidity: true,
         },
         onConfirm: (host) => currentDevice.connectHttp(host.replace(/^https?:\/\//, ""), 3000, false, host.startsWith("https")),
         onCancel: () => console.log("Canceled"),

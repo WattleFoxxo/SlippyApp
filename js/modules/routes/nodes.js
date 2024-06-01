@@ -3,6 +3,9 @@ import { registerScript } from "../router.js";
 
 import { currentDevice } from "../../index.js";
 
+/**
+ * @param {import('../device.js').Device} device 
+ */
 function loadNodes(device) {
     document.getElementById("nodeList").innerHTML = "";
 
@@ -31,19 +34,19 @@ function loadNodes(device) {
                 locationString = ` <a href="">${latitude} ${longitude}</a>`;
                 locationIcon = ("location_on");
             }
-            
+
             let batteryString = "";
             let batteryIcon = "battery_unknown";
 
             if (hasDeviceMetrics) {
                 let batteryIcons = ["battery_0_bar", "battery_1_bar", "battery_2_bar", "battery_3_bar", "battery_4_bar", "battery_5_bar", "battery_6_bar", "battery_full"];
-                
+
                 let batteryLevel = XSSEncode(clamp(node.deviceMetrics.batteryLevel, 0, 100));
-                
+
                 batteryString = `${batteryLevel}%`;
                 batteryIcon = batteryIcons[Math.round(scale(batteryLevel, 0, 100, 0, 7))];
             }
-            
+
             let template = document.createElement("template");
             template.innerHTML = `
             <mdui-list-item icon="person" end-icon="arrow_right" href="#message?channel=${userId}" fab-detach>
@@ -57,7 +60,7 @@ function loadNodes(device) {
                 </span>
             </mdui-list-item>
             `;
-    
+
             document.getElementById("nodeList").appendChild(template.content.cloneNode(true))
         } catch (e) {
             console.log("Faild to parse node: ", e);

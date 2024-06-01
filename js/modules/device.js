@@ -7,7 +7,7 @@ export class Device {
         this.client = new Meshtastic.Client();
         this.connection;
 
-        this.myNodeNumb = 0;
+        this.myNodeNum = 0;
         this.nodes = {};
         this.channels = {};
         this.nodePositions = {};
@@ -15,7 +15,7 @@ export class Device {
         this.messages = {};
     }
 
-    async connectHttp(address, fetchInterval=3000, receiveBatchRequests=false, tls=false) {
+    async connectHttp(address, fetchInterval = 3000, receiveBatchRequests = false, tls = false) {
         this.connection = this.client.createHttpConnection(0);
 
         await this.connection.connect({

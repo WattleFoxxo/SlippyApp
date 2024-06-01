@@ -4,9 +4,12 @@ import { registerScript, setTitle } from "../router.js";
 import { currentDevice } from "../../index.js";
 import { refreshPage } from "../../index.js";
 
+/**
+ * @param {URLSearchParams} params 
+ */
 function loadMessages(params) {
     let userId = params.get("channel");
-    if (!(userId in currentDevice.messages)) return; 
+    if (!(userId in currentDevice.messages)) return;
 
     document.getElementById("messageList").innerHTML = "";
 
@@ -43,7 +46,7 @@ function loadMessages(params) {
 
 export function init() {
     console.log(currentDevice);
-    
+
     var params = new URLSearchParams(`?${window.location.hash.split("?")[1]}`)
     var messageBox = document.getElementById("messageBox");
     var sendButton = document.getElementById("sendButton");
