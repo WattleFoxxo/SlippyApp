@@ -3,6 +3,7 @@ const routes = {
     "channels": "channels.html",
     "maps": "maps.html",
     "message": "message.html",
+    "settings":"settings.html",
 };
 
 let currentRoute = "";
