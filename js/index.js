@@ -34,7 +34,7 @@ window.addEventListener("load", (event) => {
 document.getElementById("connect").addEventListener("click", () => {
     mdui.prompt({
         headline: "Connect to device",
-        description: "enter the hostname of the device.",
+        description: "Enter the Hostname of the Device.",
         confirmText: "Connect",
         cancelText: "Cancel",
         textFieldOptions: {
