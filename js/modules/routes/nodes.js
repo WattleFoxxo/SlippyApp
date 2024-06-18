@@ -1,5 +1,6 @@
 import { clamp, scale, XSSEncode } from "../utils.js";
 import { registerScript } from "../router.js";
+import { Logging } from "../definitions.js";
 
 import { currentDevice } from "../../index.js";
 
@@ -63,7 +64,7 @@ function loadNodes(device) {
 
             document.getElementById("nodeList").appendChild(template.content.cloneNode(true))
         } catch (e) {
-            console.log("Faild to parse node: ", e);
+            console.log(Logging.error, "Faild to parse node: ", e);
         }
     });
 }
