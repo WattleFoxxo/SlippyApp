@@ -123,10 +123,6 @@ document.getElementById("about").addEventListener("click", () => {
     });
 });
 
-document.getElementById("sendfile").addEventListener("click", () => {
-
-});
-
 window.location.hash = "#nodes";
 navigateTo(window.location.hash.slice(1).split("?")[0]);
 
