@@ -28,6 +28,29 @@ export class Device {
         subscribe.toAll(this);
     }
 
+    async connectBluetooth() {
+        this.connection = this.client.createBleConnection(0);
+        
+        let ble_device = await this.connection.getDevice();
+
+        if (ble_device) {
+            await this.connection.connect(ble_device);
+            subscribe.toAll(this);
+        }
+    }
+
+    async connectSerial() {
+        this.connection = this.client.createSerialConnection(0);
+        
+        let port = await this.connection.getPort();
+
+        if (port) {
+            await this.connection.connect(port);
+            subscribe.toAll(this);
+        }
+    }
+
+
     sendMessage(destination, message) {
         this.connection.sendText(message, destination);
     }

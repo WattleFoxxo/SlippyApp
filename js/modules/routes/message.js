@@ -1,5 +1,6 @@
 import { clamp, scale, XSSEncode } from "../utils.js";
 import { registerScript, setTitle } from "../router.js";
+import { Logging } from "../definitions.js";
 
 import { currentDevice } from "../../index.js";
 import { refreshPage } from "../../index.js";
@@ -14,7 +15,7 @@ function loadMessages(params) {
     document.getElementById("messageList").innerHTML = "";
 
     currentDevice.messages[params.get("channel")].forEach(message => {
-        console.log("Message: ", message);
+        console.log(Logging.debug, "Message: ", message);
 
         let node = currentDevice.nodes[message.from];
 
@@ -45,8 +46,6 @@ function loadMessages(params) {
 }
 
 export function init() {
-    console.log(currentDevice);
-
     var params = new URLSearchParams(`?${window.location.hash.split("?")[1]}`)
     var messageBox = document.getElementById("messageBox");
     var sendButton = document.getElementById("sendButton");
@@ -83,7 +82,7 @@ export function init() {
         refreshPage();
     });
 
-    console.log(currentDevice.messages);
+    console.log(Logging.debug, currentDevice.messages);
 
     loadMessages(params);
 }

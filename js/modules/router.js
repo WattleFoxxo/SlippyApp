@@ -1,3 +1,5 @@
+import { Logging } from "./definitions.js";
+
 const routes = {
     "nodes": "nodes.html",
     "channels": "channels.html",
@@ -69,8 +71,8 @@ export async function navigateTo(route) {
 
     currentRoute = route;
 
-    console.log("Loading:", route);
-    console.log("in scripts:", scripts);
+    console.log(Logging.info, "loading route:", route);
+    console.log(Logging.info, "loading script:", scripts);
 
     if (route in scripts) scripts[route].init();
 }
