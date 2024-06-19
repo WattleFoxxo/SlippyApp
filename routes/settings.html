@@ -5,23 +5,9 @@
     pageTitle="Settings"
 ></div>
 
-<mdui-layout>
-    <mdui-layout-item
-      placement="left"
-      style="width: 10%"
-    ></mdui-layout-item>
-
-    <mdui-layout-item
-      placement="right"
-      style="width: 10%"
-    ></mdui-layout-item>
-  
-    <mdui-layout-main style="min-height: 300px">
-
-        <mdui-select id="theme" selects="single" value="mdui-theme-dark">
-            <mdui-menu-item value="mdui-theme-light">Light</mdui-menu-item>
-            <mdui-menu-item value="mdui-theme-dark" >Dark</mdui-menu-item>
-        </mdui-select>
-
-    </mdui-layout-main>
-  </mdui-layout>
+<div style="padding: 10px;">
+    <mdui-select id="theme" class="mdui-select-default" variant="outlined" end-icon="arrow_drop_down" value="mdui-theme-dark">
+        <mdui-menu-item id="mdui-theme-light" value="mdui-theme-light">Light</mdui-menu-item>
+        <mdui-menu-item id="mdui-theme-dark" value="mdui-theme-dark" >Dark</mdui-menu-item>
+    </mdui-select>
+</div>
