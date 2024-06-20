@@ -19,7 +19,7 @@ export function toAll(device) {
     });
 
     device.connection.events.onConfigPacket.subscribe((data) => {
-        // console.log(Logging.debug, "onConfigPacket:", data);
+        console.log(Logging.debug, "onConfigPacket:", data);
     });
 
     device.connection.events.onDetectionSensorPacket.subscribe((data) => {
@@ -27,7 +27,7 @@ export function toAll(device) {
     });
 
     device.connection.events.onDeviceDebugLog.subscribe((data) => {
-        // console.log(Logging.debug, "onDeviceDebugLog:", data);
+        console.log(Logging.debug, "onDeviceDebugLog:", data);
     });
 
     device.connection.events.onDeviceMetadataPacket.subscribe((data) => {
@@ -43,11 +43,11 @@ export function toAll(device) {
     });
 
     device.connection.events.onLogEvent.subscribe((data) => {
-        // console.log(Logging.debug, "onLogEvent:", data);
+        console.log(Logging.debug, "onLogEvent:", data);
     });
 
     device.connection.events.onLogRecord.subscribe((data) => {
-        // console.log(Logging.debug, "onLogRecord:", data);
+        console.log(Logging.debug, "onLogRecord:", data);
     });
 
     device.connection.events.onMapReportPacket.subscribe((data) => {
@@ -55,7 +55,7 @@ export function toAll(device) {
     });
 
     device.connection.events.onMeshHeartbeat.subscribe((data) => {
-        // console.log(Logging.debug, "onMeshHeartbeat:", data);
+        console.log(Logging.debug, "onMeshHeartbeat:", data);
     });
 
     device.connection.events.onMeshPacket.subscribe((data) => {
@@ -117,7 +117,7 @@ export function toAll(device) {
     });
 
     device.connection.events.onQueueStatus.subscribe((data) => {
-        // console.log(Logging.debug, "onQueueStatus:", data);
+        console.log(Logging.debug, "onQueueStatus:", data);
     });
 
     device.connection.events.onRangeTestPacket.subscribe((data) => {

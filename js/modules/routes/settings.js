@@ -45,7 +45,7 @@ export function init() {
         mdui.dialog({
             headline: "Colour Picker",
             body: `
-            <h4>Colour Presets</h4>
+            <h4>Presets</h4>
             <mdui-button-icon style="background-color: #f44336;" onclick="${setColourMacro}'#f44336'"></mdui-button-icon>
             <mdui-button-icon style="background-color: #e91e63;" onclick="${setColourMacro}'#e91e63'"></mdui-button-icon>
             <mdui-button-icon style="background-color: #9c27b0;" onclick="${setColourMacro}'#9c27b0'"></mdui-button-icon>

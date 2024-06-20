@@ -40,8 +40,18 @@ window.addEventListener("load", () => {
 /* Quick menu */
 
 document.getElementById("index/quick-menu/connect").addEventListener("click", () => {
-    function prompt_http() {
+    let waitUntillSynced = (() => {
+        let progress = mdui.dialog({
+            headline: "Connecting",
+            body: `<mdui-button loading variant="text" style="color: rgb(var(--mdui-color-on-surface));" full-width>Syncing with device.</mdui-button>`,
+        });
 
+        currentDevice.connection.events.onFromRadio.subscribe((data) => {
+            if (data.payloadVariant.case == "configCompleteId") progress.open = false;
+        });
+    });
+
+    let promptHttp = (() => {
         let isSecure = (location.protocol === "https:");
 
         mdui.dialog({
@@ -54,16 +64,18 @@ document.getElementById("index/quick-menu/connect").addEventListener("click", ()
             `,
             actions: [
                 {
-                    text: "Cancel"
+                    text: "Cancel",
                 },
                 {
                     text: "Connect",
-                    onClick: () => {
+                    onClick: async () => {
                         let hostname = document.getElementById("address_box").value;
                         let tls = document.getElementById("tls_checkbox").checked;
 
-                        currentDevice.connectHttp(hostname, 3000, false, tls);
-                    }
+                        await currentDevice.connectHttp(hostname, 3000, false, tls);
+
+                        waitUntillSynced();
+                    },
                 }
             ]
         });
@@ -74,7 +86,7 @@ document.getElementById("index/quick-menu/connect").addEventListener("click", ()
         checkbox.addEventListener("click", () => {
             warning.hidden = !(isSecure && checkbox.checked);
         });
-    }
+    });
     
     mdui.dialog({
         headline: "Connect to device",
@@ -88,24 +100,25 @@ document.getElementById("index/quick-menu/connect").addEventListener("click", ()
         `,
         actions: [
             {
-                text: "Cancel"
+                text: "Cancel",
             },
             {
                 text: "Ok",
-                onClick: () => {
+                onClick: async () => {
                     switch (document.getElementById("connect_dialog_selection").value) {
                         case "http":
-                            prompt_http();
+                            promptHttp();
                             break;
                         case "bluetooth":
-                            currentDevice.connectBluetooth();
+                            await currentDevice.connectBluetooth();
+                            waitUntillSynced();
                             break;
                         case "serial":
-                            currentDevice.connectSerial();
+                            await currentDevice.connectSerial();
+                            waitUntillSynced();
                             break;
                     }
-
-                }
+                },
             }
         ]
     });

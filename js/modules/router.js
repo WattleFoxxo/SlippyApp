@@ -6,7 +6,6 @@ const routes = {
     "maps": "maps.html",
     "message": "message.html",
     "settings":"settings.html",
-    "settings/appearance": "settings/appearance.html",
 };
 
 let scripts = {};
@@ -27,6 +26,11 @@ function updateUI() {
 
     let hasNavbar = pageSettings.hasAttribute("has-navbar");
     let hasBackButton = pageSettings.hasAttribute("has-back-button");
+
+    console.log(hasBackButton);
+
+    navbar.style = "";
+    backButton.style = "";
 
     if (!hasNavbar) navbar.style = "display: none;";
     if (!hasBackButton) backButton.style = "display: none;";

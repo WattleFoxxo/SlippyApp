@@ -5,8 +5,19 @@ import { Logging } from "../definitions.js";
 import { currentDevice } from "../../index.js";
 
 function loadNodes(device) {
+
     let nodeList = document.getElementById("nodes/node-list");
     nodeList.innerHTML = "";
+
+    if (!currentDevice.connection) {
+        nodeList.innerHTML = '<div class="empty-list">No nodes are here yet,<br>Try connecting to a device.</>';
+        return false;
+    }
+
+    if (Object.keys(device.nodes).length <= 0) {
+        nodeList.innerHTML = '<div class="empty-list">No nodes are here yet.</>';
+        return false;
+    }
 
     Object.entries(device.nodes).forEach(([userId, node]) => {
         try {

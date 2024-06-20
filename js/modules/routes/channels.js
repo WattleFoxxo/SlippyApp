@@ -8,6 +8,11 @@ function loadNodes(device) {
     let channelList = document.getElementById("channels/channel-list");
     channelList.innerHTML = "";
 
+    if (!currentDevice.connection) {
+        channelList.innerHTML = '<div class="empty-list">No channels are here yet...<br>Try connecting to a device.</>';
+        return false;
+    }
+
     Object.entries(device.channels).forEach(([channelId, channel]) => {
         try {
             let index = XSSEncode(channel.index);
