@@ -1,27 +1,49 @@
-<div id="pageSettings"
-    hasNavbar="true"
-    hasBackButton="false"
-    backButtonURL="#"
-    pageTitle="Settings"
+<div id="index/page-settings"
+    page-title="Settings"
+    has-navbar
 ></div>
 
-<mdui-layout>
-    <mdui-layout-item
-      placement="left"
-      style="width: 10%"
-    ></mdui-layout-item>
+<style>
+    .settings-list h2 {
+        margin: 10px;
+    }
 
-    <mdui-layout-item
-      placement="right"
-      style="width: 10%"
-    ></mdui-layout-item>
-  
-    <mdui-layout-main style="min-height: 300px">
+    .settings-list div {
+        padding: 10px;
+    }
+</style>
 
-        <mdui-select id="theme" selects="single" value="mdui-theme-dark">
-            <mdui-menu-item value="mdui-theme-light">Light</mdui-menu-item>
-            <mdui-menu-item value="mdui-theme-dark" >Dark</mdui-menu-item>
-        </mdui-select>
+<div id="index/page-body" class="page-body">
+    <mdui-list id="settings/setting-list" class="settings-list">
 
-    </mdui-layout-main>
-  </mdui-layout>
+        <h2>&#xf027c Appearance</h2>
+        
+        <div>
+            <mdui-select id="settings/appearance/theme" class="mdui-select-is-silly" label="Theme" variant="outlined" end-icon="arrow_drop_down" value="auto">
+                <mdui-menu-item value="light">Light</mdui-menu-item>
+                <mdui-menu-item value="dark" >Dark</mdui-menu-item>
+                <mdui-menu-item value="auto" >Auto</mdui-menu-item>
+            </mdui-select>
+        </div>
+
+        <div><mdui-text-field id="settings/appearance/colour-theme" readonly end-icon="color_lens" label="Colour Theme" variant="outlined" value="#673ab7"></mdui-text-field></div>
+
+        <br><h2>&#xf043b Radio</h2>
+        <div><mdui-button id="settings/radio/connect" variant="outlined" full-width>Connect</mdui-button></div>
+
+        <!--
+            <h2>&#xeb34 Radio</h2>
+
+            <h2>&#xed00 Location</h2>
+
+            <h2>&#xf27a Messages</h2>
+        -->
+
+        <br><h2>&#xf0831 Other</h2>
+        <div><mdui-button id="settings/other/about" variant="outlined" full-width>About</mdui-button></div>
+        <div><mdui-button id="settings/other/debug" variant="outlined" full-width disabled>Debug</mdui-button></div>
+
+        <!-- TODO: change version -->
+        <br><div style="font-size: small; text-align: center;">Slippy app version 0.1.0-a18d <a href="https://github.com/WattleFoxxo/SlippyApp">Github</a></div>
+    </mdui-list>
+</div>

@@ -1,8 +1,28 @@
-<div id="pageSettings"
-    hasNavbar="true"
-    hasBackButton="false"
-    backButtonURL="#"
-    pageTitle="Nodes"
+<div id="index/page-settings"
+    page-title="Nodes"
+    has-navbar
 ></div>
 
-<mdui-list id="nodeList"></mdui-list>
+<style>
+    .node-description {
+        color: rgb(var(--mdui-color-on-surface-variant));
+        font-size: var(--mdui-typescale-body-medium-size);
+        letter-spacing: var(--mdui-typescale-body-medium-tracking);
+        line-height: var(--mdui-typescale-body-medium-line-height);
+        vertical-align: middle;
+    }
+
+    .empty-list {
+        text-align: center;
+        position: fixed;
+        width:100%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgb(var(--mdui-color-on-surface-variant));
+    }
+</style>
+
+<div id="index/page-body" class="page-body">
+    <mdui-list id="nodes/node-list"></mdui-list>
+</div>

@@ -41,31 +41,49 @@
         <link rel="manifest" href="./manifest.json">
     </head>
     <body>
-        <mdui-layout full-height>
-            <mdui-top-app-bar id="topbar">
-                <mdui-button-icon id="topbar/backButton" icon="arrow_back"></mdui-button-icon>
-                <mdui-top-app-bar-title id="topbar/title">Nodes</mdui-top-app-bar-title>
+        <div class="app-container">
+
+            <!-- Title bar -->
+            <mdui-top-app-bar id="index/titlebar" class="app-bar">
+                <mdui-button-icon id="index/titlebar/back-button" icon="arrow_back"></mdui-button-icon>
+                <mdui-top-app-bar-title id="index/titlebar/title">Nodes</mdui-top-app-bar-title>
+                
                 <div style="flex-grow: 1"></div>
+                
+                <!-- Quick menu -->
                 <mdui-dropdown>
                     <mdui-button-icon icon="more_vert" slot="trigger"></mdui-button-icon>
                     <mdui-menu>
-                        <mdui-menu-item id="connect">Connect</mdui-menu-item>
-                        <mdui-menu-item id="refresh">Refresh</mdui-menu-item>
-                        <mdui-menu-item id="about">About</mdui-menu-item>
+                        <mdui-menu-item id="index/quick-menu/refresh">Refresh</mdui-menu-item>
                     </mdui-menu>
                 </mdui-dropdown>
             </mdui-top-app-bar>
 
-            <mdui-navigation-bar id="navbar" value="nodes">
+            <div id="index/page-container" class="app-content">
+                <!-- 
+                    Example page
+
+                    <div id="index/page-settings"
+                        page-title="Settings" // set the page title *required*
+                        has-navbar // enable nav/bottom bar
+                        has-back-button // enable back button
+                        back-button-url="#" // set the back button url
+                    ></div>
+
+                    <div id="index/page-body" class="page-body">
+                        // page content
+                    </div>
+                -->
+            </div>
+
+            <!-- Navbar -->
+            <mdui-navigation-bar id="index/navbar" class="app-bar" value="nodes">
                 <mdui-navigation-bar-item icon="workspaces" href="#nodes" value="nodes">Nodes</mdui-navigation-bar-item>
                 <mdui-navigation-bar-item icon="chat_bubble_outline" href="#channels" value="channels">Channels</mdui-navigation-bar-item>
                 <mdui-navigation-bar-item icon="map" href="#maps" value="maps">Maps</mdui-navigation-bar-item>
                 <mdui-navigation-bar-item icon="settings" href="#settings" value="settings">Settings</mdui-navigation-bar-item>
             </mdui-navigation-bar>
-
-            <mdui-layout-main id="content"></mdui-layout-main>
-
-        </mdui-layout>
+        </div>
 
         <script type="module" src="./js/index.js"></script>
 

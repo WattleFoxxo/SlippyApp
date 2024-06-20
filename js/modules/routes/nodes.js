@@ -4,20 +4,28 @@ import { Logging } from "../definitions.js";
 
 import { currentDevice } from "../../index.js";
 
-/**
- * @param {import('../device.js').Device} device 
- */
 function loadNodes(device) {
-    document.getElementById("nodeList").innerHTML = "";
+
+    let nodeList = document.getElementById("nodes/node-list");
+    nodeList.innerHTML = "";
+
+    if (!currentDevice.connection) {
+        nodeList.innerHTML = '<div class="empty-list">No nodes are here yet,<br>Try connecting to a device.</>';
+        return false;
+    }
+
+    if (Object.keys(device.nodes).length <= 0) {
+        nodeList.innerHTML = '<div class="empty-list">No nodes are here yet.</>';
+        return false;
+    }
 
     Object.entries(device.nodes).forEach(([userId, node]) => {
-
         try {
             let hasUser = ("user" in node);
             let hasLocation = ("position" in node);
             let hasDeviceMetrics = ("deviceMetrics" in node);
 
-            let longName = `!${userId.toString(16)}`;
+            let longName = XSSEncode(`!${userId.toString(16)}`);
             let shortName = "UNK";
 
             if (hasUser) {
@@ -53,16 +61,16 @@ function loadNodes(device) {
             <mdui-list-item icon="person" end-icon="arrow_right" href="#message?channel=${userId}" fab-detach>
                 ${longName} <mdui-badge style="vertical-align: middle;">${shortName}</mdui-badge>
                 <span slot="description">
-                    <span style="white-space: nowrap"><i class="material-icons nodes-nodelistitemdescription">${batteryIcon}</i>${batteryString}</span>
+                    <span style="white-space: nowrap"><i class="material-icons node-description">${batteryIcon}</i>${batteryString}</span>
                     &nbsp;
-                    <span style="white-space: nowrap"><i class="material-icons nodes-nodelistitemdescription">schedule</i> UNK</span>
+                    <span style="white-space: nowrap"><i class="material-icons node-description">schedule</i> UNK</span>
                     &nbsp;
-                    <span style="white-space: nowrap"><i class="material-icons nodes-nodelistitemdescription">${locationIcon}</i>${locationString}</span>
+                    <span style="white-space: nowrap"><i class="material-icons node-description">${locationIcon}</i>${locationString}</span>
                 </span>
             </mdui-list-item>
             `;
 
-            document.getElementById("nodeList").appendChild(template.content.cloneNode(true))
+            nodeList.appendChild(template.content.cloneNode(true))
         } catch (e) {
             console.log(Logging.error, "Faild to parse node: ", e);
         }

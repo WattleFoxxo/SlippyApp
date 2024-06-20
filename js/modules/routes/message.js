@@ -5,23 +5,26 @@ import { Logging } from "../definitions.js";
 import { currentDevice } from "../../index.js";
 import { refreshPage } from "../../index.js";
 
-/**
- * @param {URLSearchParams} params 
- */
-function loadMessages(params) {
-    let userId = params.get("channel");
-    if (!(userId in currentDevice.messages)) return;
+function loadMessages(channelId) {
+    console.log(Logging.debug, currentDevice.messages);
 
-    document.getElementById("messageList").innerHTML = "";
+    if (!(channelId in currentDevice.messages)) {
+        console.log(Logging.warn, "No messages in channel: ", channelId);
+        return false;
+    }
 
-    currentDevice.messages[params.get("channel")].forEach(message => {
-        console.log(Logging.debug, "Message: ", message);
+    let messages = currentDevice.messages[channelId];
+
+    let messageList = document.getElementById("message/message-list");
+    messageList.innerHTML = "";
+
+    messages.forEach(message => {
+        console.log(Logging.debug, "Found message: ", message);
 
         let node = currentDevice.nodes[message.from];
-
         let hasUser = ("user" in node);
 
-        let longName = `!${userId.toString(16)}`;
+        let longName = XSSEncode(`!${channelId.toString(16)}`);
         let shortName = "UNK";
 
         if (hasUser) {
@@ -41,55 +44,44 @@ function loadMessages(params) {
         </mdui-list-item>
         `;
 
-        document.getElementById("messageList").appendChild(template.content.cloneNode(true));
+        messageList.appendChild(template.content.cloneNode(true));
     });
 }
 
 export function init() {
     var params = new URLSearchParams(`?${window.location.hash.split("?")[1]}`)
-    var messageBox = document.getElementById("messageBox");
-    var sendButton = document.getElementById("sendButton");
+    var messageBox = document.getElementById("message/message-box");
+    var sendButton = document.getElementById("message/send-button");
 
-    let userId = params.get("channel");
+    let channelId = parseInt(params.get("channel"));
+    let node = currentDevice.nodes[channelId];
 
-    let node = currentDevice.nodes[userId];
     let hasUser = ("user" in node);
-    let longName = `!${userId.toString(16)}`;
+    let longName = XSSEncode(`!${channelId.toString(16)}`);
 
-    if (hasUser) {
-        longName = XSSEncode(node.user.longName);
-    }
+    if (hasUser) longName = XSSEncode(node.user.longName);
 
     setTitle(`Message ${longName}`);
     messageBox.setAttribute("label", `Message ${longName}`);
 
+    // Send button
     sendButton.addEventListener("click", (event) => {
         if (messageBox.value.length == 0) return;
 
-        if (!(userId in currentDevice.messages)) currentDevice.messages[userId] = [];
-        currentDevice.messages[userId].push({
-            channel: 0,
-            data: messageBox.value,
-            from: parseInt(currentDevice.myNodeNum),
-            to: parseInt(userId),
-            id: 0,
-            rxTime: new Date(),
-            type: "direct"
-        });
-
-        currentDevice.sendMessage(parseInt(userId), messageBox.value);
+        currentDevice.sendMessage(channelId, messageBox.value);
         messageBox.value = "";
+        
         refreshPage();
     });
 
-    console.log(Logging.debug, currentDevice.messages);
-
-    loadMessages(params);
+    loadMessages(channelId);
 }
 
 export function refresh() {
     var params = new URLSearchParams(`?${window.location.hash.split("?")[1]}`)
-    loadMessages(params);
+    let channelId = parseInt(params.get("channel"));
+
+    loadMessages(channelId);
 }
 
 registerScript("message", init, refresh);
