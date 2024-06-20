@@ -4,7 +4,7 @@ import { currentDevice } from "../../index.js";
 
 // god forgive me for this - WattleFoxxo
 export function cursedFunction() {
-    const elements = document.querySelectorAll('.mdui-select-default');
+    const elements = document.querySelectorAll('.mdui-select-is-silly');
     elements.forEach((element) => {
         element.defaultValue = element.value;
 
