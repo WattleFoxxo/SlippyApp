@@ -3,7 +3,7 @@ import { registerScript } from "../router.js";
 import { currentDevice } from "../../index.js";
 
 // god forgive me for this - WattleFoxxo
-function cursedFunction() {
+export function cursedFunction() {
     const elements = document.querySelectorAll('.mdui-select-default');
     elements.forEach((element) => {
         element.defaultValue = element.value;

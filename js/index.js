@@ -11,6 +11,10 @@ import "./modules/routes/settings.js"
 
 export let currentDevice = new Device(0);
 
+export function refreshPage() {
+    refresh();
+}
+
 window.addEventListener("load", () => {
     // if (location.protocol === "https:" && !checkCookie("ignore-https-warn")) {
     //     mdui.dialog({
@@ -33,7 +37,9 @@ window.addEventListener("load", () => {
     // }
 });
 
-document.getElementById("connect").addEventListener("click", () => {
+/* Quick menu */
+
+document.getElementById("index/quick-menu/connect").addEventListener("click", () => {
     function prompt_http() {
 
         let isSecure = (location.protocol === "https:");
@@ -105,15 +111,11 @@ document.getElementById("connect").addEventListener("click", () => {
     });
 });
 
-export function refreshPage() {
-    refresh();
-}
-
-document.getElementById("refresh").addEventListener("click", () => {
+document.getElementById("index/quick-menu/refresh").addEventListener("click", () => {
     refreshPage();
 });
 
-document.getElementById("about").addEventListener("click", () => {
+document.getElementById("index/quick-menu/about").addEventListener("click", () => {
     console.log(Logging.info, "Meshtastic:", Meshtastic);
     console.log(Logging.info, "Current device:", currentDevice);
     
@@ -123,6 +125,8 @@ document.getElementById("about").addEventListener("click", () => {
         confirmText: "Ok",
     });
 });
+
+/*  */
 
 window.location.hash = "#nodes";
 navigateTo(window.location.hash.slice(1).split("?")[0]);

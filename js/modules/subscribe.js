@@ -65,8 +65,10 @@ export function toAll(device) {
     device.connection.events.onMessagePacket.subscribe((data) => {
         console.log(Logging.debug, "onMessagePacket:", data);
 
-        if (!(data.from in device.messages)) device.messages[data.from] = [];
-        device.messages[data.from].push(data);
+        let senderId = parseInt(data.from);
+
+        if (!(senderId in device.messages)) device.messages[senderId] = [];
+        device.messages[senderId].push(data);
 
         refreshPage();
     });

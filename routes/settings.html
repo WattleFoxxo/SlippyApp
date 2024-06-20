@@ -1,13 +1,21 @@
-<div id="pageSettings"
-    hasNavbar="true"
-    hasBackButton="false"
-    backButtonURL="#"
-    pageTitle="Settings"
+<div id="index/page-settings"
+    page-title="Settings"
+    has-navbar
 ></div>
 
-<div style="padding: 10px;">
-    <mdui-select id="theme" class="mdui-select-default" variant="outlined" end-icon="arrow_drop_down" value="mdui-theme-dark">
-        <mdui-menu-item id="mdui-theme-light" value="mdui-theme-light">Light</mdui-menu-item>
-        <mdui-menu-item id="mdui-theme-dark" value="mdui-theme-dark" >Dark</mdui-menu-item>
-    </mdui-select>
+<div id="index/page-body" class="page-body">
+    <mdui-list id="nodeList">
+        <mdui-list-subheader>Appearance</mdui-list-subheader>
+        <mdui-list-item>
+            <mdui-select id="appearance/theme" class="mdui-select-default" label="Theme" variant="outlined" end-icon="arrow_drop_down" value="mdui-theme-auto">
+                <mdui-menu-item value="mdui-theme-light">Light</mdui-menu-item>
+                <mdui-menu-item value="mdui-theme-dark" >Dark</mdui-menu-item>
+                <mdui-menu-item value="mdui-theme-auto" >Auto</mdui-menu-item>
+            </mdui-select>
+        </mdui-list-item>
+
+        <mdui-list-item>
+            <mdui-text-field readonly icon="color_lens" label="Theme Colour" variant="outlined" value="#000000"></mdui-text-field>
+        </mdui-list-item>
+    </mdui-list>
 </div>

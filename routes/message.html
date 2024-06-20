@@ -1,18 +1,32 @@
-<div id="pageSettings"
-    hasNavbar="false"
-    hasBackButton="true"
-    backButtonURL="#nodes"
-    pageTitle="Message UNK"
+<div id="index/page-settings"
+    page-title="Message UNK"
+    back-button-url="#nodes"
+    has-back-button
 ></div>
 
-<div class="flexcontainer">
-    <div style="flex: 1; overflow-y: auto;">
-        <mdui-list id="messageList"></mdui-list>
-    </div>
+<style>
+    .flex-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
-    <div style='padding: 10px;'>
-        <mdui-text-field id="messageBox" variant="outlined" label="Message UNK">
-            <mdui-button-icon id="sendButton" slot="end-icon" icon="send"></mdui-button-icon>
-        </mdui-text-field>
+    .message-list-container {
+        flex: 1;
+        overflow-y: auto;
+    }
+</style>
+
+<div id="index/page-body" class="page-body">
+    <div class="flex-container">
+        <div class="message-list-container">
+            <mdui-list id="message/message-list"></mdui-list>
+        </div>
+
+        <div style='padding: 10px;'>
+            <mdui-text-field id="message/message-box" variant="outlined" label="Message UNK">
+                <mdui-button-icon id="message/send-button" slot="end-icon" icon="send"></mdui-button-icon>
+            </mdui-text-field>
+        </div>
     </div>
 </div>
