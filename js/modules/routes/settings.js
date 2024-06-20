@@ -1,6 +1,7 @@
 import { clamp, scale, XSSEncode } from "../utils.js";
 import { registerScript } from "../router.js";
 import { currentDevice } from "../../index.js";
+import { Logging } from "../definitions.js";
 
 // god forgive me for this - WattleFoxxo
 export function cursedFunction() {
@@ -10,14 +11,20 @@ export function cursedFunction() {
 
         element.addEventListener("change", () => {
             if (element.value.length <= 0) {
-                element.value = (element.defaultValue);
+                element.value = element.defaultValue;
                 
                 // i dont know why this is fucking nesersary but it wont work any other way
                 // if i continue to be a programmer i WILL become an alcaholic
                 setTimeout(() => {
-                    document.getElementById(element.value).setAttribute("selected", true); 
+                    Array.from(element.children).forEach((child) => {
+                        if (child.value == element.value) child.setAttribute("selected", true); 
+                    });
                 }, 0); // why tf do i need a 0 ms delay for this to work 💀
+
+                return false;
             }
+
+            element.defaultValue = element.value;
         });
     });
 }
