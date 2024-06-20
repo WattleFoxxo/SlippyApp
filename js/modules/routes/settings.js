@@ -33,7 +33,7 @@ export function init() {
     cursedFunction();
 
     let theme = document.getElementById("settings/appearance/theme");
-    theme.addEventListener("change", (e) => {
+    theme.addEventListener("change", () => {
         mdui.setTheme(theme.value);
     });
     
@@ -82,6 +82,107 @@ export function init() {
                     },
                 }
             ]
+        });
+    });
+
+    /* Radio */
+    let radioConnect = document.getElementById("settings/radio/connect");
+    radioConnect.addEventListener("click", () => {
+        let waitUntillSynced = (() => {
+            let progress = mdui.dialog({
+                headline: "Connecting",
+                body: `<mdui-button loading variant="text" style="color: rgb(var(--mdui-color-on-surface));" full-width>Syncing with device.</mdui-button>`,
+            });
+    
+            currentDevice.connection.events.onFromRadio.subscribe((data) => {
+                if (data.payloadVariant.case == "configCompleteId") progress.open = false;
+                radioConnect.disabled = true;
+            });
+        });
+    
+        let promptHttp = (() => {
+            let isSecure = (location.protocol === "https:");
+    
+            mdui.dialog({
+                headline: "Connect to HTTP device",
+                body: `
+                <span>Enter the Hostname of the Device.<span><br><br>
+                <mdui-text-field id="address_box" variant="outlined" label="Hostname" value="meshtastic.local"></mdui-text-field><br><br>
+                <mdui-checkbox id="tls_checkbox" ${isSecure ? "checked" : ""}>TLS</mdui-checkbox><br>
+                <span id="tls_warning" style="color: rgb(var(--mdui-color-error));" hidden>Disabling TLS while using a secure context might cause issues if your node doesn't have TLS enabled. <a href="https://github.com/WattleFoxxo/SlippyApp/blob/main/README.md">more info</a>.</span>
+                `,
+                actions: [
+                    {
+                        text: "Cancel",
+                    },
+                    {
+                        text: "Connect",
+                        onClick: async () => {
+                            let hostname = document.getElementById("address_box").value;
+                            let tls = document.getElementById("tls_checkbox").checked;
+    
+                            await currentDevice.connectHttp(hostname, 3000, false, tls);
+    
+                            waitUntillSynced();
+                        },
+                    }
+                ]
+            });
+    
+            let checkbox = document.getElementById("tls_checkbox");
+            let warning = document.getElementById("tls_warning");
+    
+            checkbox.addEventListener("click", () => {
+                warning.hidden = !(isSecure && checkbox.checked);
+            });
+        });
+        
+        mdui.dialog({
+            headline: "Connect to device",
+            body: `
+            <span>Select connection type<span><br><br>
+            <mdui-radio-group id="connect_dialog_selection" value="http">
+                <mdui-radio value="http">HTTP</mdui-radio><br>
+                <mdui-radio ${navigator.bluetooth ? "" : "disabled"} value="bluetooth">Bluetooth</mdui-radio><br>
+                <mdui-radio ${navigator.serial ? "" : "disabled"} value="serial">Serial</mdui-radio>
+            </mdui-radio-group>
+            `,
+            actions: [
+                {
+                    text: "Cancel",
+                },
+                {
+                    text: "Ok",
+                    onClick: async () => {
+                        switch (document.getElementById("connect_dialog_selection").value) {
+                            case "http":
+                                promptHttp();
+                                break;
+                            case "bluetooth":
+                                await currentDevice.connectBluetooth();
+                                waitUntillSynced();
+                                break;
+                            case "serial":
+                                await currentDevice.connectSerial();
+                                waitUntillSynced();
+                                break;
+                        }
+                    },
+                }
+            ]
+        });
+    });
+
+    /* Other */
+    let otherAbout = document.getElementById("settings/other/about");
+    otherAbout.addEventListener("click", () => {
+        console.log(Logging.info, "Meshtastic:", Meshtastic);
+        console.log(Logging.info, "Current device:", currentDevice);
+        
+        mdui.alert({
+            headline: "About Slippy",
+            description: "(Hopefully) A User-Friendly Application Created by Wattlefox, Woobie, lockness Ko and Leocatto. Held together by hopes and dreams.",
+            confirmText: "Ok",
         });
     });
 }

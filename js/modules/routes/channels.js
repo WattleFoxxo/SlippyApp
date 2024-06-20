@@ -9,7 +9,7 @@ function loadNodes(device) {
     channelList.innerHTML = "";
 
     if (!currentDevice.connection) {
-        channelList.innerHTML = '<div class="empty-list">No channels are here yet...<br>Try connecting to a device.</>';
+        channelList.innerHTML = '<div class="empty-list">No channels are here yet,<br>Try connecting to a device.</>';
         return false;
     }
 
