@@ -121,7 +121,7 @@ document.getElementById("index/quick-menu/about").addEventListener("click", () =
     
     mdui.alert({
         headline: "About Slippy",
-        description: "Created by Wattlefox, Woobie, lockness Ko and Leocatto",
+        description: "(Hopefully) A User-Friendly Application Created by Wattlefox, Woobie, lockness Ko and Leocatto",
         confirmText: "Ok",
     });
 });

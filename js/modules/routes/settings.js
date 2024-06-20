@@ -25,7 +25,7 @@ export function cursedFunction() {
 export function init() {
     cursedFunction();
 
-    let theme_dropdown = document.getElementById("theme");
+    let theme_dropdown = document.getElementById("settings/appearance/theme");
     theme_dropdown.addEventListener("change", (e) => {
         document.body.setAttribute("class", theme_dropdown.value);
         console.log(document.body.className);
