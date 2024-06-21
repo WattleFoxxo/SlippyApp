@@ -7,6 +7,9 @@ let map;
 
 let markers = [];
 
+/**
+ * @param {import('../device.js').Device} device 
+ */
 function loadNodes(device, map) {
 
     markers.forEach((marker) => {
@@ -54,7 +57,7 @@ function loadNodes(device, map) {
 }
 
 export function init() {
-    map = L.map('maps/map').fitWorld();
+    map = L.map('map').fitWorld();
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,

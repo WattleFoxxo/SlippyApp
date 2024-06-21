@@ -52,21 +52,6 @@ export class Device {
 
 
     sendMessage(destination, message) {
-
-        // Make sure we have an entry
-        if (!(destination in this.messages)) this.messages[destination] = [];
-        
-        this.messages[destination].push({
-            channel: 0,
-            data: message,
-            from: parseInt(this.myNodeNum),
-            to: parseInt(destination),
-            id: 0,
-            rxTime: new Date(),
-            type: "direct"
-        });
-
-
         this.connection.sendText(message, destination);
     }
 }
