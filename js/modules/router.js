@@ -8,8 +8,9 @@ const routes = {
     "settings":"settings.html",
 };
 
-let scripts = {};
 let currentRoute = "";
+
+const scripts = {};
 
 export function registerScript(route, init, refresh) {
     scripts[route] = {
@@ -18,40 +19,37 @@ export function registerScript(route, init, refresh) {
     };
 }
 
-function updateUI() {
-    let title = document.getElementById("index/titlebar/title");
-    let navbar = document.getElementById("index/navbar");
-    let backButton = document.getElementById("index/titlebar/back-button");
-    let pageSettings = document.getElementById("index/page-settings");
+function manageUi() {
+    let navbar = document.getElementById("navbar");
+    let backButton = document.getElementById("topbar/backButton");
+    let title = document.getElementById("topbar/title");
 
-    let hasNavbar = pageSettings.hasAttribute("has-navbar");
-    let hasBackButton = pageSettings.hasAttribute("has-back-button");
+    let pageSettings = document.getElementById("pageSettings");
 
-    console.log(hasBackButton);
+    navbar.style = ((pageSettings.getAttribute("hasNavbar") === "true") ? "" : "display: none;");
+    backButton.style = ((pageSettings.getAttribute("hasBackButton") === "true") ? "" : "display: none;");
 
-    navbar.style = "";
-    backButton.style = "";
-
-    if (!hasNavbar) navbar.style = "display: none;";
-    if (!hasBackButton) backButton.style = "display: none;";
-
-    backButton.href = pageSettings.getAttribute("back-button-url");
-    title.innerText = pageSettings.getAttribute("page-title");
+    backButton.href = pageSettings.getAttribute("backButtonURL");
+    title.innerText = pageSettings.getAttribute("pageTitle");
 }
 
 async function fetchContent(filePath) {
-    let response = await fetch(`./routes/${filePath}`);
+    try {
+        let response = await fetch(`./routes/${filePath}`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch HTML content");
+        }
+        let html = await response.text();
 
-    if (!response.ok) {
-        console.log(Logging.error, "Failed to fetch HTML content");
-        return "<h2>Failed to fetch HTML content, try restarting or reinstalling slippy.</h2>";
+        return html;
+    } catch (error) {
+        console.error(error);
+        return '<h2>Error: Failed to fetch HTML content</h2>';
     }
-
-    return await response.text();
 }
 
 export function setTitle(title) {
-    document.getElementById("index/titlebar/title").innerText = title;
+    document.getElementById("topbar/title").innerText = title;
 }
 
 export function refresh() {
@@ -59,20 +57,23 @@ export function refresh() {
 }
 
 export async function navigateTo(route) {
-    console.log(Logging.info, "loading route:", route);
-
     let filePath = routes[route];
     if (!filePath) {
         return navigateTo("nodes");
     }
 
     let content = await fetchContent(filePath);
-    let container = document.getElementById("index/page-container");
+    let container = document.getElementById("content");
 
     container.innerHTML = content;
-    updateUI();
+
+    manageUi();
 
     currentRoute = route;
+
+    console.log(Logging.info, "loading route:", route);
+    console.log(Logging.info, "loading script:", scripts);
+
     if (route in scripts) scripts[route].init();
 }
 

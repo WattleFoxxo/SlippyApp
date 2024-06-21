@@ -4,17 +4,16 @@ import { Logging } from "../definitions.js";
 
 import { currentDevice } from "../../index.js";
 
+/**
+ * @param {import('../device.js').Device} device 
+ */
 function loadNodes(device) {
-    let channelList = document.getElementById("channels/channel-list");
-    channelList.innerHTML = "";
-
-    if (!currentDevice.connection) {
-        channelList.innerHTML = '<div class="empty-list">No channels are here yet,<br>Try connecting to a device.</>';
-        return false;
-    }
+    document.getElementById("channelList").innerHTML = "";
 
     Object.entries(device.channels).forEach(([channelId, channel]) => {
+
         try {
+
             let index = XSSEncode(channel.index);
             let name = XSSEncode((channel.settings.name.length != 0) ? channel.settings.name : "UNK");
 
@@ -25,7 +24,7 @@ function loadNodes(device) {
             </mdui-list-item>
             `;
 
-            channelList.appendChild(template.content.cloneNode(true))
+            document.getElementById("channelList").appendChild(template.content.cloneNode(true))
         } catch (e) {
             console.log(Logging.error, "Faild to parse node: ", e);
         }
