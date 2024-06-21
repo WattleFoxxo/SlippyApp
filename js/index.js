@@ -7,7 +7,6 @@ import "./modules/routes/nodes.js"
 import "./modules/routes/message.js"
 import "./modules/routes/channels.js"
 import "./modules/routes/maps.js"
-import "./modules/routes/settings.js"
 
 export let currentDevice = new Device(0);
 
