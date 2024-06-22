@@ -65,7 +65,7 @@ export function toAll(device) {
     device.connection.events.onMessagePacket.subscribe((data) => {
         console.log(Logging.debug, "onMessagePacket:", data);
 
-        if (!(data.from in this.messages)) device.messages[data.from] = [];
+        if (!(data.from in device.messages)) device.messages[data.from] = [];
         device.messages[data.from].push(data);
 
         refreshPage();
