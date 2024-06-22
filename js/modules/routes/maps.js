@@ -54,7 +54,7 @@ function loadNodes(device, map) {
 }
 
 export function init() {
-    map = L.map('maps/map').fitWorld();
+    map = L.map('maps.map').fitWorld();
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,

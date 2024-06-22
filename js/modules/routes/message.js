@@ -15,7 +15,7 @@ function loadMessages(channelId) {
 
     let messages = currentDevice.messages[channelId];
 
-    let messageList = document.getElementById("message/message-list");
+    let messageList = document.getElementById("message.message-list");
     messageList.innerHTML = "";
 
     messages.forEach(message => {
@@ -50,8 +50,8 @@ function loadMessages(channelId) {
 
 export function init() {
     var params = new URLSearchParams(`?${window.location.hash.split("?")[1]}`)
-    var messageBox = document.getElementById("message/message-box");
-    var sendButton = document.getElementById("message/send-button");
+    var messageBox = document.getElementById("message.message-box");
+    var sendButton = document.getElementById("message.send-button");
 
     let channelId = parseInt(params.get("channel"));
     let node = currentDevice.nodes[channelId];

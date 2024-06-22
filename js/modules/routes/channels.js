@@ -5,7 +5,7 @@ import { Logging } from "../definitions.js";
 import { currentDevice } from "../../index.js";
 
 function loadNodes(device) {
-    let channelList = document.getElementById("channels/channel-list");
+    let channelList = document.getElementById("channels.channel-list");
     channelList.innerHTML = "";
 
     if (!currentDevice.connection) {

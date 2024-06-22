@@ -19,10 +19,10 @@ export function registerScript(route, init, refresh) {
 }
 
 function updateUI() {
-    let title = document.getElementById("index/titlebar/title");
-    let navbar = document.getElementById("index/navbar");
-    let backButton = document.getElementById("index/titlebar/back-button");
-    let pageSettings = document.getElementById("index/page-settings");
+    let title = document.getElementById("index.titlebar.title");
+    let navbar = document.getElementById("index.navbar");
+    let backButton = document.getElementById("index.titlebar.back-button");
+    let pageSettings = document.getElementById("index.page-settings");
 
     let hasNavbar = pageSettings.hasAttribute("has-navbar");
     let hasBackButton = pageSettings.hasAttribute("has-back-button");
@@ -51,7 +51,7 @@ async function fetchContent(filePath) {
 }
 
 export function setTitle(title) {
-    document.getElementById("index/titlebar/title").innerText = title;
+    document.getElementById("index.titlebar.title").innerText = title;
 }
 
 export function refresh() {
@@ -67,7 +67,7 @@ export async function navigateTo(route) {
     }
 
     let content = await fetchContent(filePath);
-    let container = document.getElementById("index/page-container");
+    let container = document.getElementById("index.page-container");
 
     container.innerHTML = content;
     updateUI();

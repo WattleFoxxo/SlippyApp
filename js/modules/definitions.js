@@ -1,5 +1,5 @@
 
-export const SLIPPY_APP_PORT = 256;
+export const VERSION = "0.1.1-a18d";
 
 export const Logging = {
     debug: "[DEBUG]",

@@ -1,6 +1,7 @@
 import { navigateTo, refresh } from "./modules/router.js";
 import { Device } from "./modules/device.js";
-import { Logging } from "./modules/definitions.js";
+import { Logging, AppStorage } from "./modules/utils.js";
+import { initSettings } from "./modules/settings_manager.js";
 
 /* Routes */
 import "./modules/routes/nodes.js"
@@ -10,6 +11,9 @@ import "./modules/routes/maps.js"
 import "./modules/routes/settings.js"
 
 export let currentDevice = new Device(0);
+export let currentSettings = new AppStorage("settings");
+
+initSettings(currentSettings);
 
 export function refreshPage() {
     refresh();
@@ -39,7 +43,7 @@ window.addEventListener("load", () => {
 
 /* Quick menu */
 
-document.getElementById("index/quick-menu/refresh").addEventListener("click", () => {
+document.getElementById("index.quick-menu.refresh").addEventListener("click", () => {
     refreshPage();
 });
 

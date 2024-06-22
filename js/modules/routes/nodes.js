@@ -6,7 +6,7 @@ import { currentDevice } from "../../index.js";
 
 function loadNodes(device) {
 
-    let nodeList = document.getElementById("nodes/node-list");
+    let nodeList = document.getElementById("nodes.node-list");
     nodeList.innerHTML = "";
 
     if (!currentDevice.connection) {
@@ -70,7 +70,7 @@ function loadNodes(device) {
             </mdui-list-item>
             `;
 
-            nodeList.appendChild(template.content.cloneNode(true))
+            nodeList.appendChild(template.content.cloneNode(true));
         } catch (e) {
             console.log(Logging.error, "Faild to parse node: ", e);
         }
