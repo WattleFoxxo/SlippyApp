@@ -1,5 +1,6 @@
 import { refreshPage, deviceStorage } from "../index.js";
 import { Logging } from "./definitions.js";
+import { XSSEncode } from "./utils.js";
 
 
 export function toAll(device) {
@@ -68,10 +69,27 @@ export function toAll(device) {
         if (!(parseInt(data.from) in device.messages)) device.messages[parseInt(data.from)] = [];
         device.messages[parseInt(data.from)].push(data);
 
+        // HACK
         // THIS IS A VERY BAD IDEA!
         deviceStorage.setItem("messages", JSON.stringify(device.messages));
 
         refreshPage();
+
+        // HACK! FIX LATER
+        let node = device.nodes[parseInt(data.from)];
+
+        let longName = XSSEncode(`!${parseInt(data.from).toString(16)}`);
+        let shortName = "UNK";
+
+        if ("user" in node) {
+            longName = XSSEncode(node.user.longName);
+            shortName = XSSEncode(node.user.shortName);
+        }
+
+        new Notification(`Message From ${longName} (${shortName})`, {
+            body: XSSEncode(data.data),
+            // icon: "/icons/android/android-launchericon-48-48.png",
+        });
     });
 
     device.connection.events.onModuleConfigPacket.subscribe((data) => {

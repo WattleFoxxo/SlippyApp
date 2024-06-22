@@ -181,6 +181,10 @@ function otherDeleteAll() {
     });
 }
 
+function otherRequestPermissions() {
+
+}
+
 export const settingMap = {
     // Appearance
     "appearance.category": {
@@ -233,19 +237,11 @@ export const settingMap = {
             "label": "&#xf0831 Other",
         },
     },
-    "other.about": {
-        "onClick": otherAbout,
+    "other.request-permissions": {
+        "onClick": otherRequestPermissions,
         "ui": {
             "type": "button",
-            "label": "About",
-        },
-    },
-    "other.debug": {
-        "onClick": otherDebug,
-        "ui": {
-            "type": "button",
-            "label": "Debug",
-            "disabled": true,
+            "label": "Request Permissions",
         },
     },
     "other.delete-messages": {
@@ -260,6 +256,21 @@ export const settingMap = {
         "ui": {
             "type": "button",
             "label": "Delete Everything",
+        },
+    },
+    "other.debug": {
+        "onClick": otherDebug,
+        "ui": {
+            "type": "button",
+            "label": "Debug",
+            "disabled": true,
+        },
+    },
+    "other.about": {
+        "onClick": otherAbout,
+        "ui": {
+            "type": "button",
+            "label": "About",
         },
     },
 }
