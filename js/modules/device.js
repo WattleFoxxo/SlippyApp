@@ -67,7 +67,7 @@ export class Device {
             type: "direct"
         });
 
-        // THIS IS A VERY BAD IDEA!
+        // THIS IS A VERY BAD IDEA! HACK!
         deviceStorage.setItem("messages", JSON.stringify(this.messages));
 
         this.connection.sendText(message, parseInt(destination));

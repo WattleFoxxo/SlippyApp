@@ -182,7 +182,11 @@ function otherDeleteAll() {
 }
 
 function otherRequestPermissions() {
-
+    Notification.requestPermission().then((result) => {
+        if (result === "granted") {
+            new Notification("Notification permissions now granted!");
+        }
+    });
 }
 
 export const settingMap = {

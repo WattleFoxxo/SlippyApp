@@ -34,15 +34,6 @@ navigateTo(window.location.hash.slice(1).split("?")[0]);
 console.log(Logging.info, "Meshtastic:", Meshtastic);
 console.log(Logging.info, "Current device:", currentDevice);
 
-Notification.requestPermission().then((result) => {
-    if (result === "granted") {
-        // new Notification("Hello World!", {
-        //     body: "Hello World!",
-        //     icon: "/icons/android/android-launchericon-48-48.png",
-        // });
-    }
-});
-
 if ("serviceWorker" in navigator) {
     await navigator.serviceWorker.register("service-worker.js", {
         type: "module",
