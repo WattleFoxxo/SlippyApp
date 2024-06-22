@@ -54,9 +54,9 @@ export class Device {
     sendMessage(destination, message) {
 
         // Make sure we have an entry
-        if (!(destination in this.messages)) this.messages[destination] = [];
+        if (!(parseInt(destination) in this.messages)) this.messages[parseInt(destination)] = [];
         
-        this.messages[destination].push({
+        this.messages[parseInt(destination)].push({
             channel: 0,
             data: message,
             from: parseInt(this.myNodeNum),
@@ -67,6 +67,6 @@ export class Device {
         });
 
 
-        this.connection.sendText(message, destination);
+        this.connection.sendText(message, parseInt(destination));
     }
 }

@@ -21,7 +21,7 @@ function loadMessages(channelId) {
     messages.forEach(message => {
         console.log(Logging.debug, "Found message: ", message);
 
-        let node = currentDevice.nodes[message.from];
+        let node = currentDevice.nodes[parseInt(message.from)];
         let hasUser = ("user" in node);
 
         let longName = XSSEncode(`!${channelId.toString(16)}`);
@@ -54,7 +54,7 @@ export function init() {
     var sendButton = document.getElementById("message.send-button");
 
     let channelId = parseInt(params.get("channel"));
-    let node = currentDevice.nodes[channelId];
+    let node = currentDevice.nodes[parseInt(channelId)];
 
     let hasUser = ("user" in node);
     let longName = XSSEncode(`!${channelId.toString(16)}`);

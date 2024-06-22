@@ -18,8 +18,13 @@ function radioConnect() {
         });
 
         currentDevice.connection.events.onFromRadio.subscribe((data) => {
-            if (data.payloadVariant.case == "configCompleteId") progress.open = false;
-            radioConnect.disabled = true;
+            if (data.payloadVariant.case) {
+                if (data.payloadVariant.case == "configCompleteId") {
+                    progress.open = false;
+                    document.getElementById("settings.radio.connect").getAttribute("disabled", true);
+                    settingMap["radio.connect"].ui["disabled"] = true;
+                }
+            }
         });
     });
 

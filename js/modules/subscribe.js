@@ -13,7 +13,7 @@ export function toAll(device) {
 
     device.connection.events.onChannelPacket.subscribe((data) => {
         console.log(Logging.debug, "onChannelPacket:", data);
-        device.channels[data.index] = data;
+        device.channels[parseInt(data.index)] = data;
 
         refreshPage();
     });
@@ -65,8 +65,8 @@ export function toAll(device) {
     device.connection.events.onMessagePacket.subscribe((data) => {
         console.log(Logging.debug, "onMessagePacket:", data);
 
-        if (!(data.from in device.messages)) device.messages[data.from] = [];
-        device.messages[data.from].push(data);
+        if (!(parseInt(data.from) in device.messages)) device.messages[parseInt(data.from)] = [];
+        device.messages[parseInt(data.from)].push(data);
 
         refreshPage();
     });
@@ -86,7 +86,7 @@ export function toAll(device) {
 
     device.connection.events.onNodeInfoPacket.subscribe((data) => {
         console.log(Logging.debug, "onNodeInfoPacket:", data);
-        device.nodes[data.num] = data;
+        device.nodes[parseInt(data.num)] = data;
 
         refreshPage();
     });
