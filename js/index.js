@@ -11,9 +11,14 @@ import "./modules/routes/maps.js"
 import "./modules/routes/settings.js"
 
 export let currentDevice = new Device(0);
-export let currentSettings = new AppStorage("settings");
 
-initSettings(currentSettings);
+export let settingsStorage = new AppStorage("settings");
+export let deviceStorage = new AppStorage("device");
+
+initSettings(settingsStorage);
+
+let messageStorage = deviceStorage.getItem("messages");
+if (messageStorage) currentDevice.messages = JSON.parse(messageStorage);
 
 export function refreshPage() {
     refresh();

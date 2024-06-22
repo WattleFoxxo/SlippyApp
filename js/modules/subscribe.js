@@ -1,4 +1,4 @@
-import { refreshPage } from "../index.js";
+import { refreshPage, deviceStorage } from "../index.js";
 import { Logging } from "./definitions.js";
 
 
@@ -67,6 +67,9 @@ export function toAll(device) {
 
         if (!(parseInt(data.from) in device.messages)) device.messages[parseInt(data.from)] = [];
         device.messages[parseInt(data.from)].push(data);
+
+        // THIS IS A VERY BAD IDEA!
+        deviceStorage.setItem("messages", JSON.stringify(device.messages));
 
         refreshPage();
     });

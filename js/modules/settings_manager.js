@@ -1,4 +1,5 @@
-import { currentDevice } from "../index.js";
+import { currentDevice, deviceStorage } from "../index.js";
+import { Logging } from "./utils.js";
 
 function appearanceTheme(value) {
     mdui.setTheme(value);
@@ -120,6 +121,66 @@ function otherDebug() {
 
 }
 
+function otherDeleteMessages() {
+    mdui.dialog({
+        headline: "Delete Messages",
+        body: `
+            <span style="color: rgb(var(--mdui-color-error))">
+                Are you sure?<br><br>
+                <b>Doing this will delete ALL messages on THIS device!<b>
+            </span>
+        `,
+        actions: [
+            {
+                text: "No",
+            },
+            {
+                text: "Yes",
+                onClick: () => {
+                    currentDevice.messages = {};
+                    deviceStorage.setItem("messages", JSON.stringify(currentDevice.messages));
+
+                    mdui.snackbar({ message: "Successfully deleted all messages!" });
+                },
+            },
+        ],
+    });
+}
+
+function otherDeleteAll() {
+    mdui.dialog({
+        headline: "Delete Everything",
+        body: `
+            <span style="color: rgb(var(--mdui-color-error))">
+                Are you sure?<br><br>
+                <b>Doing this will delete EVERYTHING including: Messages, Nodes, Favorites and Settings!<b>
+            </span>
+        `,
+        actions: [
+            {
+                text: "No",
+            },
+            {
+                text: "Yes",
+                onClick: () => {
+                    localStorage.clear();
+                    
+                    try {
+                        navigator.app.exitApp();
+                    } catch {
+                        console.log(Logging.warn, "Faild to run navigator.app.exitApp() this probably means your running in the browser.")
+                    }
+
+                    mdui.dialog({
+                        headline: "Restart",
+                        body: "Please restart this app to continue.",
+                    });
+                },
+            },
+        ],
+    });
+}
+
 export const settingMap = {
     // Appearance
     "appearance.category": {
@@ -185,6 +246,20 @@ export const settingMap = {
             "type": "button",
             "label": "Debug",
             "disabled": true,
+        },
+    },
+    "other.delete-messages": {
+        "onClick": otherDeleteMessages,
+        "ui": {
+            "type": "button",
+            "label": "Delete Messages",
+        },
+    },
+    "other.delete-all": {
+        "onClick": otherDeleteAll,
+        "ui": {
+            "type": "button",
+            "label": "Delete Everything",
         },
     },
 }

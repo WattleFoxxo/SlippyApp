@@ -1,4 +1,5 @@
 import * as subscribe from "./subscribe.js";
+import { deviceStorage } from "../index.js";
 
 export class Device {
     constructor(id) {
@@ -66,6 +67,8 @@ export class Device {
             type: "direct"
         });
 
+        // THIS IS A VERY BAD IDEA!
+        deviceStorage.setItem("messages", JSON.stringify(this.messages));
 
         this.connection.sendText(message, parseInt(destination));
     }
