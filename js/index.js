@@ -19,35 +19,9 @@ export function refreshPage() {
     refresh();
 }
 
-window.addEventListener("load", () => {
-    // if (location.protocol === "https:" && !checkCookie("ignore-https-warn")) {
-    //     mdui.dialog({
-    //         headline: "Hold up!",
-    //         body: `
-    //         <span>It looks like you're using a secure context.<br>
-    //         This might cause issues if your node doesn't have TLS enabled.<br><br>
-    //         Learn more about that <a href="https://github.com/WattleFoxxo/SlippyApp/blob/main/README.md">here</a>.<span>
-    //         `,
-    //         actions: [
-    //             {
-    //                 text: "Don't show again",
-    //                 onClick: () => setCookie("ignore-https-warn", true, 256),
-    //             },
-    //             {
-    //                 text: "Acknowledge"
-    //             }
-    //         ]
-    //     });
-    // }
-});
-
-/* Quick menu */
-
 document.getElementById("index.quick-menu.refresh").addEventListener("click", () => {
     refreshPage();
 });
-
-/*  */
 
 window.location.hash = "#nodes";
 navigateTo(window.location.hash.slice(1).split("?")[0]);
