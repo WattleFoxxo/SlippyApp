@@ -9,10 +9,6 @@ export function cursedFunction() {
     elements.forEach((element) => {
         element.defaultValue = element.value;
 
-        element.updateComplete.then(() => {
-            element.value = element.defaultValue;
-        });
-
         element.addEventListener("change", () => {
             if (element.value.length <= 0) {
                 element.value = element.defaultValue;
