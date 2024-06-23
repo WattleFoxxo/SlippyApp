@@ -1,88 +1,89 @@
-import { clamp, scale, XSSEncode } from "../utils.js";
+import { clamp, scale, XSSEncode, Logging, DeviceStatus } from "../utils.js";
 import { registerScript } from "../router.js";
-import { Logging } from "../definitions.js";
+import { globalDevice } from "../../index.js";
 
-import { currentDevice } from "../../index.js";
-
-function loadNodes(device) {
-
+function loadNodes() {
     let nodeList = document.getElementById("nodes.node-list");
     nodeList.innerHTML = "";
 
-    if (!currentDevice.connection) {
+    if (!globalDevice.status == DeviceStatus.Disconnected) {
         nodeList.innerHTML = '<div class="empty-list">No nodes are here yet,<br>Try connecting to a device.</>';
         return false;
     }
 
-    if (Object.keys(device.nodes).length <= 0) {
+    if (!globalDevice.nodes.size) {
         nodeList.innerHTML = '<div class="empty-list">No nodes are here yet.</>';
         return false;
     }
 
-    Object.entries(device.nodes).forEach(([userId, node]) => {
-        try {
-            let hasUser = ("user" in node);
-            let hasLocation = ("position" in node);
-            let hasDeviceMetrics = ("deviceMetrics" in node);
+    console.log(globalDevice.nodes);
 
-            let longName = XSSEncode(`!${userId.toString(16)}`);
-            let shortName = "UNK";
+    globalDevice.nodes.forEach((node, id) => {
 
-            if (hasUser) {
-                longName = XSSEncode(node.user.longName);
-                shortName = XSSEncode(node.user.shortName);
-            }
+    });
 
-            let locationString = "";
-            let locationIcon = "location_off";
+    globalDevice.nodes.forEach((node, id) => {
+        let hasUser = ("user" in node);
+        let hasLocation = ("position" in node);
+        let hasDeviceMetrics = ("deviceMetrics" in node);
 
-            if (hasLocation) {
-                let latitude = XSSEncode((parseInt(node.position.latitudeI) * 0.0000001).toFixed(5));
-                let longitude = XSSEncode((parseInt(node.position.longitudeI) * 0.0000001).toFixed(5));
-
-                locationString = ` <a href="">${latitude} ${longitude}</a>`;
-                locationIcon = ("location_on");
-            }
-
-            let batteryString = "";
-            let batteryIcon = "battery_unknown";
-
-            if (hasDeviceMetrics) {
-                let batteryIcons = ["battery_0_bar", "battery_1_bar", "battery_2_bar", "battery_3_bar", "battery_4_bar", "battery_5_bar", "battery_6_bar", "battery_full"];
-
-                let batteryLevel = XSSEncode(clamp(node.deviceMetrics.batteryLevel, 0, 100));
-
-                batteryString = `${batteryLevel}%`;
-                batteryIcon = batteryIcons[Math.round(scale(batteryLevel, 0, 100, 0, 7))];
-            }
-
-            let template = document.createElement("template");
-            template.innerHTML = `
-            <mdui-list-item icon="person" end-icon="arrow_right" href="#message?channel=${userId}" fab-detach>
-                ${longName} <mdui-badge style="vertical-align: middle;">${shortName}</mdui-badge>
-                <span slot="description">
-                    <span style="white-space: nowrap"><i class="material-icons node-description">${batteryIcon}</i>${batteryString}</span>
-                    &nbsp;
-                    <span style="white-space: nowrap"><i class="material-icons node-description">schedule</i> UNK</span>
-                    &nbsp;
-                    <span style="white-space: nowrap"><i class="material-icons node-description">${locationIcon}</i>${locationString}</span>
-                </span>
-            </mdui-list-item>
-            `;
-
-            nodeList.appendChild(template.content.cloneNode(true));
-        } catch (e) {
-            console.log(Logging.error, "Faild to parse node: ", e);
+        let longName = XSSEncode(`!${id.toString(16)}`);
+        let shortName = "UNK";
+        if (hasUser) {
+            longName = XSSEncode(node.user.longName);
+            shortName = XSSEncode(node.user.shortName);
         }
+
+        let latitude = 0.00000;
+        let longitude = 0.00000;
+        if (hasLocation) {
+            latitude = (parseInt(node.position.latitudeI) * 0.0000001).toFixed(3);
+            longitude = (parseInt(node.position.longitudeI) * 0.0000001).toFixed(3);
+        }
+
+        let batteryLevel = 0;
+        if (hasDeviceMetrics) {
+            batteryLevel = clamp(parseInt(node.deviceMetrics.batteryLevel), 0, 100);
+        }
+
+        let lastHeard = moment(new Date(node.lastHeard * 1000)).fromNow()
+
+        let template = document.getElementById("nodes.node-list.template");
+        let newItem = template.content.cloneNode(true);
+
+        let templateItem = newItem.getElementById("_template.item");
+        let templateLongName = newItem.getElementById("_template.long-name");
+        let templateShortName = newItem.getElementById("_template.short-name");
+        let templateBattery = newItem.getElementById("_template.battery");
+        let templateBatteryIcon = newItem.getElementById("_template.battery.icon");
+        let templateTimestamp = newItem.getElementById("_template.timestamp");
+        let templatePosition = newItem.getElementById("_template.position");
+        let templatePositionIcon = newItem.getElementById("_template.position.icon");
+
+        templateItem.href = `#message?channel=${id}`;
+        templateLongName.innerText = longName;
+        templateShortName.innerText = shortName;
+        templateBattery.innerText = hasDeviceMetrics?`${batteryLevel}%`:"";
+        templateTimestamp.innerText = lastHeard;
+        templatePosition.innerText = hasLocation?`${latitude}, ${longitude}`:"";
+        templatePosition.href = hasLocation?`#maps?latitude=${latitude}&longitude=${longitude}`:"";
+        
+        let batteryIcons = ["battery_0_bar", "battery_1_bar", "battery_2_bar", "battery_3_bar", "battery_4_bar", "battery_5_bar", "battery_6_bar", "battery_full"];
+        let batteryIcon = batteryIcons[Math.round(scale(batteryLevel, 0, 100, 0, 7))];
+        
+        templateBatteryIcon.name = hasDeviceMetrics?batteryIcon:"battery_unknown";
+        templatePositionIcon.name = hasLocation?"location_on":"location_off"
+        
+        nodeList.appendChild(newItem);
     });
 }
 
 export function init() {
-    loadNodes(currentDevice);
+    loadNodes();
 }
 
 export function refresh() {
-    loadNodes(currentDevice);
+    loadNodes();
 }
 
 registerScript("nodes", init, refresh);

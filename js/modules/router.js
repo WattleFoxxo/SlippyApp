@@ -1,4 +1,4 @@
-import { Logging } from "./definitions.js";
+import { Logging } from "./utils.js";
 
 const routes = {
     "nodes": "nodes.html",
@@ -54,7 +54,7 @@ export function setTitle(title) {
     document.getElementById("index.titlebar.title").innerText = title;
 }
 
-export function refresh() {
+export function refreshPage() {
     if (currentRoute in scripts) scripts[currentRoute].refresh();
 }
 

@@ -279,7 +279,7 @@ export const settingMap = {
     },
 }
 
-export function initSettings(settingStorage) {      
+export function initSettings(settingStorage) {
     Object.entries(settingMap).forEach(([key, object]) => {
         if (object.onChange) {
             settingStorage.onSetItem.addEventListener(key, object.onChange);

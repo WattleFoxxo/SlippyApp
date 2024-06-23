@@ -195,7 +195,6 @@ export function init() {
         </div>
     `;
     
-    
     settingsList.appendChild(versionString.content.cloneNode(true))
 }
 
