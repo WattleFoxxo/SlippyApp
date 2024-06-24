@@ -80,6 +80,7 @@ function loadNodes() {
 
 export function init() {
     loadNodes();
+    globalDevice.events.addEventListener("onNode", () => refresh());
 }
 
 export function refresh() {
