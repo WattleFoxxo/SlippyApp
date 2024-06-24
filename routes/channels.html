@@ -16,7 +16,19 @@
 </style>
 
 <div id="index.page-body" class="page-body">
-    <mdui-list id="channels.channel-list">
-        <p>Nothing here yet.</p>
-    </mdui-list>
+    <template id="channels.channel-list.template">
+        <mdui-list-item
+            id="_template.item"
+            icon="people"
+            end-icon="arrow_right"
+            fab-detach
+            href="#message?channel=${id}"
+        >
+            <span id="_template.name">${name}</span>
+            <mdui-badge id="_template.id" style="vertical-align: middle;">#${id}</mdui-badge>
+            <span slot="description"></span>
+        </mdui-list-item>
+    </template>
+
+    <mdui-list id="channels.channel-list"></mdui-list>
 </div>

@@ -1,22 +1,19 @@
-import { clamp, scale, XSSEncode } from "../utils.js";
-import { registerScript, setTitle } from "../router.js";
-import { Logging } from "../definitions.js";
+import { XSSEncode, Logging } from "../utils.js";
+import { registerScript } from "../router.js";
+import { globalDevice } from "../../index.js";
 
-import { currentDevice } from "../../index.js";
-import { refreshPage } from "../../index.js";
+function loadMessages(channel) {
+    let messageList = document.getElementById("message.message-list");
+    messageList.innerHTML = "";
 
-function loadMessages(channelId) {
-    console.log(Logging.debug, currentDevice.messages);
+    console.log(Logging.debug, globalDevice.messages);
 
-    if (!(channelId in currentDevice.messages)) {
-        console.log(Logging.warn, "No messages in channel: ", channelId);
+    if (!globalDevice.messages.has(channel)) {
+        console.log(Logging.warn, "No messages in channel: ", channel);
         return false;
     }
 
-    let messages = currentDevice.messages[channelId];
-
-    let messageList = document.getElementById("message.message-list");
-    messageList.innerHTML = "";
+    let messages = currentDevice.messages.get(id);
 
     messages.forEach(message => {
         console.log(Logging.debug, "Found message: ", message);

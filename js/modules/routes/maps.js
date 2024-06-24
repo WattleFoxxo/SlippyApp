@@ -8,7 +8,6 @@ let map;
 let markers = [];
 
 function loadNodes(device, map) {
-
     markers.forEach((marker) => {
         marker.remove();
     });

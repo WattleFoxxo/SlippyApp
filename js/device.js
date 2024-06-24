@@ -4,7 +4,7 @@ export class Device {
     constructor() {
         this.client = new Meshtastic.Client();
         this.connection;
-        this.status;
+        this.status = DeviceStatus.Disconnected;
 
         this.myNodeNum;
         this.nodes = new Map();

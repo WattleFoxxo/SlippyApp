@@ -6,23 +6,22 @@ function loadNodes() {
     let nodeList = document.getElementById("nodes.node-list");
     nodeList.innerHTML = "";
 
-    if (!globalDevice.status == DeviceStatus.Disconnected) {
-        nodeList.innerHTML = '<div class="empty-list">No nodes are here yet,<br>Try connecting to a device.</>';
+    if (globalDevice.status == DeviceStatus.Disconnected) {
+        nodeList.innerHTML = '<div class="empty-list">No nodes are here yet,<br>Try connecting to a device.</div>';
         return false;
     }
 
     if (!globalDevice.nodes.size) {
-        nodeList.innerHTML = '<div class="empty-list">No nodes are here yet.</>';
+        nodeList.innerHTML = '<div class="empty-list">No nodes are here yet.</div>';
         return false;
     }
 
-    console.log(globalDevice.nodes);
+    // Sort by last seen
+    let nodesArray = Array.from(globalDevice.nodes, ([key, value]) => ({ key, value }));
+    nodesArray.sort((a, b) => b.value.lastHeard - a.value.lastHeard);
+    let sortedNodes = new Map(nodesArray.map(obj => [obj.key, obj.value]));
 
-    globalDevice.nodes.forEach((node, id) => {
-
-    });
-
-    globalDevice.nodes.forEach((node, id) => {
+    sortedNodes.forEach((node, id) => {
         let hasUser = ("user" in node);
         let hasLocation = ("position" in node);
         let hasDeviceMetrics = ("deviceMetrics" in node);

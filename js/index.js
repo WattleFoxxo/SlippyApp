@@ -41,14 +41,15 @@ import { DeviceStatus } from "./modules/utils.js";
 // import { initSettings } from "./modules/settings_manager.js";
 
 import "./modules/routes/nodes.js"
+import "./modules/routes/channels.js"
 // import "./modules/routes/message.js"
-// import "./modules/routes/channels.js"
 // import "./modules/routes/maps.js"
 // import "./modules/routes/settings.js"
 
 export let globalDevice = new Device();
 
-globalDevice.connect();
+// globalDevice.connect();
+document.getElementById("index.quick-menu.connect").addEventListener("click", () => globalDevice.connect());
 
 globalDevice.events.addEventListener("onStatus", (status) => {
     console.log("onStatus", status);
