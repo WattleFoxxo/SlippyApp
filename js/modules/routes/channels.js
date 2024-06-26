@@ -2,7 +2,7 @@ import { clamp, scale, XSSEncode, Logging, DeviceStatus } from "../utils.js";
 import { registerScript } from "../router.js";
 import { globalDevice } from "../../index.js";
 
-function loadNodes() {
+function loadChannels() {
     let channelList = document.getElementById("channels.channel-list");
     channelList.innerHTML = "";
 
@@ -37,12 +37,13 @@ function loadNodes() {
 }
 
 export function init() {
-    loadNodes();
     globalDevice.events.addEventListener("onChannel", () => refresh());
+
+    loadChannels();
 }
 
 export function refresh() {
-    loadNodes();
+    loadChannels();
 }
 
 registerScript("channels", init, refresh);

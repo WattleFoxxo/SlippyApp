@@ -45,9 +45,9 @@ export class CustomEvents {
 export class AppStorage {
     constructor(name) {
         this.name = name;
-        this.onSetItem = new AppEvents();
-        this.onGetItem = new AppEvents();
-        this.onRemoveItem = new AppEvents();
+        this.onSetItem = new CustomEvents();
+        this.onGetItem = new CustomEvents();
+        this.onRemoveItem = new CustomEvents();
     }
 
     setItem(key, value) {

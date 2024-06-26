@@ -36,8 +36,8 @@ function loadNodes() {
         let latitude = 0.00000;
         let longitude = 0.00000;
         if (hasLocation) {
-            latitude = (parseInt(node.position.latitudeI) * 0.0000001).toFixed(3);
-            longitude = (parseInt(node.position.longitudeI) * 0.0000001).toFixed(3);
+            latitude = parseInt(node.position.latitudeI) * 0.0000001;
+            longitude = parseInt(node.position.longitudeI) * 0.0000001;
         }
 
         let batteryLevel = 0;
@@ -64,22 +64,23 @@ function loadNodes() {
         templateShortName.innerText = shortName;
         templateBattery.innerText = hasDeviceMetrics?`${batteryLevel}%`:"";
         templateTimestamp.innerText = lastHeard;
-        templatePosition.innerText = hasLocation?`${latitude}, ${longitude}`:"";
+        templatePosition.innerText = hasLocation?`${latitude.toFixed(5)}, ${longitude.toFixed(5)}`:"";
         templatePosition.href = hasLocation?`#maps?latitude=${latitude}&longitude=${longitude}`:"";
         
         let batteryIcons = ["battery_0_bar", "battery_1_bar", "battery_2_bar", "battery_3_bar", "battery_4_bar", "battery_5_bar", "battery_6_bar", "battery_full"];
         let batteryIcon = batteryIcons[Math.round(scale(batteryLevel, 0, 100, 0, 7))];
         
         templateBatteryIcon.name = hasDeviceMetrics?batteryIcon:"battery_unknown";
-        templatePositionIcon.name = hasLocation?"location_on":"location_off"
+        templatePositionIcon.name = hasLocation?"location_on":"location_off";
         
         nodeList.appendChild(newItem);
     });
 }
 
 export function init() {
-    loadNodes();
     globalDevice.events.addEventListener("onNode", () => refresh());
+
+    loadNodes();
 }
 
 export function refresh() {

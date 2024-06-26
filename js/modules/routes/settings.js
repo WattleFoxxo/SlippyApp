@@ -1,6 +1,6 @@
 import { Logging } from "../utils.js";
 import { registerScript } from "../router.js";
-import { settingsStorage } from "../../index.js";
+import { settingStorage } from "../../index.js";
 import { settingMap } from "../settings_manager.js";
 import { VERSION } from "../definitions.js";
 
@@ -88,7 +88,7 @@ function htmlFromItem(key, object) {
                         id="settings.${key}"
                         label="${item.label}"
                         variant="outlined"
-                        value="${settingsStorage.getItem(key)}"
+                        value="${settingStorage.getItem(key)}"
                     ></mdui-text-field>
                 </div>
             `;
@@ -113,7 +113,7 @@ function htmlFromItem(key, object) {
                         label="${item.label}"
                         variant="outlined"
                         end-icon="arrow_drop_down"
-                        value="${settingsStorage.getItem(key)}"
+                        value="${settingStorage.getItem(key)}"
                     >
                         ${dropdownHTML}
                     </mdui-select>
@@ -130,7 +130,7 @@ function htmlFromItem(key, object) {
                         end-icon="color_lens"
                         label="${item.label}"
                         variant="outlined"
-                        value="${settingsStorage.getItem(key)}"
+                        value="${settingStorage.getItem(key)}"
                     ></mdui-text-field>
                 </div>
             `;
@@ -161,7 +161,7 @@ function htmlFromItem(key, object) {
 }
 
 function postItemCreation(key, object, element) {
-    if (object.onChange) element.addEventListener("change", () => settingsStorage.setItem(key, element.value));
+    if (object.onChange) element.addEventListener("change", () => settingStorage.setItem(key, element.value));
     if (object.onClick) element.addEventListener("click", object.onClick);
     
     switch (object.ui.type) {
