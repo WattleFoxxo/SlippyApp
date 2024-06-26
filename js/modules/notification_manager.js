@@ -3,6 +3,8 @@ import { XSSEncode } from "./utils.js";
 
 export function initNoitif() {
     globalDevice.events.addEventListener("onMessage", (message) => {
+        if (message.from == globalDevice.myNodeNum) return;
+
         let longName = XSSEncode(`!${message.from.toString(16)}`);
         let shortName = "UNK";
         
