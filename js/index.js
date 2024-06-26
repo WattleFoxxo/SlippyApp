@@ -1,38 +1,31 @@
-import { navigateTo, refresh } from "./modules/router.js";
-import { Device } from "./modules/device.js";
-import { Logging, AppStorage } from "./modules/utils.js";
-import { initSettings } from "./modules/settings_manager.js";
+import * as router from "./modules/router.js";
+import { Device } from "./device.js";
+import { DeviceStatus, AppStorage } from "./modules/utils.js";
 
-/* Routes */
 import "./modules/routes/nodes.js"
-import "./modules/routes/message.js"
 import "./modules/routes/channels.js"
+import "./modules/routes/message.js"
 import "./modules/routes/maps.js"
 import "./modules/routes/settings.js"
 
-export let currentDevice = new Device(0);
+export let globalDevice = new Device();
 
-export let settingsStorage = new AppStorage("settings");
-export let deviceStorage = new AppStorage("device");
+export let deviceStorage = new AppStorage("deviceStorage");
+export let settingStorage = new AppStorage("settingStorage");
 
-initSettings(settingsStorage);
+import { initSettings } from "./modules/settings_manager.js";
+import { initSave, loadDevice } from "./modules/save_manager.js";
+import { initNoitif } from "./modules/notification_manager.js"
 
-let messageStorage = deviceStorage.getItem("messages");
-if (messageStorage) currentDevice.messages = JSON.parse(messageStorage);
+initSettings();
+initNoitif();
+// initSave();
+// loadDevice();
 
-export function refreshPage() {
-    refresh();
-}
-
-document.getElementById("index.quick-menu.refresh").addEventListener("click", () => {
-    refreshPage();
-});
+document.getElementById("index.quick-menu.refresh").addEventListener("refresh", () => router.refreshPage());
 
 window.location.hash = "#nodes";
-navigateTo(window.location.hash.slice(1).split("?")[0]);
-
-console.log(Logging.info, "Meshtastic:", Meshtastic);
-console.log(Logging.info, "Current device:", currentDevice);
+router.navigateTo("nodes");
 
 if ("serviceWorker" in navigator) {
     await navigator.serviceWorker.register("service-worker.js", {

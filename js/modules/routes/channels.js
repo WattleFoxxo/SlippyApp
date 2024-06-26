@@ -1,43 +1,49 @@
-import { clamp, scale, XSSEncode } from "../utils.js";
+import { clamp, scale, XSSEncode, Logging, DeviceStatus } from "../utils.js";
 import { registerScript } from "../router.js";
-import { Logging } from "../definitions.js";
+import { globalDevice } from "../../index.js";
 
-import { currentDevice } from "../../index.js";
-
-function loadNodes(device) {
+function loadChannels() {
     let channelList = document.getElementById("channels.channel-list");
     channelList.innerHTML = "";
 
-    if (!currentDevice.connection) {
-        channelList.innerHTML = '<div class="empty-list">No channels are here yet,<br>Try connecting to a device.</>';
+    if (globalDevice.status == DeviceStatus.Disconnected) {
+        channelList.innerHTML = '<div class="empty-list">No channels are here yet,<br>Try connecting to a device.</div>';
         return false;
     }
 
-    Object.entries(device.channels).forEach(([channelId, channel]) => {
-        try {
-            let index = XSSEncode(channel.index);
-            let name = XSSEncode((channel.settings.name.length != 0) ? channel.settings.name : "UNK");
+    globalDevice.channels.forEach((channel, id) => {
+        let template = document.getElementById("channels.channel-list.template");
+        let newItem = template.content.cloneNode(true);
 
-            let template = document.createElement("template");
-            template.innerHTML = `
-            <mdui-list-item icon="people" end-icon="arrow_right" href="#message?channel=${index}" fab-detach>
-                ${name} <mdui-badge style="vertical-align: middle;">#${index}</mdui-badge>
-            </mdui-list-item>
-            `;
+        let templateItem = newItem.getElementById("_template.item");
+        let templateName = newItem.getElementById("_template.name");
+        let templateId = newItem.getElementById("_template.id");
 
-            channelList.appendChild(template.content.cloneNode(true))
-        } catch (e) {
-            console.log(Logging.error, "Faild to parse node: ", e);
+        let name = XSSEncode(channel.settings.name);
+        if (channel.settings.name.length <= 0) {
+            name = "Public";
         }
+
+        if (channel.role == 0) {
+            name = "UNK";
+        }
+
+        templateItem.href = `#message?channel=${id}`;
+        templateName.innerText = name;
+        templateId.innerText = `#${id}`;
+        
+        channelList.appendChild(newItem);
     });
 }
 
 export function init() {
-    loadNodes(currentDevice);
+    globalDevice.events.addEventListener("onChannel", () => refresh());
+
+    loadChannels();
 }
 
 export function refresh() {
-    loadNodes(currentDevice);
+    loadChannels();
 }
 
 registerScript("channels", init, refresh);

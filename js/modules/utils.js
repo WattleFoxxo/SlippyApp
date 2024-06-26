@@ -19,7 +19,7 @@ export const Logging = {
     emerg: "[EMERG]"
 };
 
-export class AppEvents {
+export class CustomEvents {
     constructor() {
         this.events = {};
     }
@@ -45,9 +45,9 @@ export class AppEvents {
 export class AppStorage {
     constructor(name) {
         this.name = name;
-        this.onSetItem = new AppEvents();
-        this.onGetItem = new AppEvents();
-        this.onRemoveItem = new AppEvents();
+        this.onSetItem = new CustomEvents();
+        this.onGetItem = new CustomEvents();
+        this.onRemoveItem = new CustomEvents();
     }
 
     setItem(key, value) {
@@ -67,3 +67,13 @@ export class AppStorage {
         this.onRemoveItem.dispatchEvent(key);
     }
 }
+
+export const DeviceStatus = Object.freeze({
+    Restarting: 1,
+    Disconnected: 2,
+    Connecting: 3,
+    Reconnecting: 4,
+    Connected: 5,
+    Configuring: 6,
+    Configured: 7,
+});

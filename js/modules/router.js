@@ -1,4 +1,4 @@
-import { Logging } from "./definitions.js";
+import { Logging } from "./utils.js";
 
 const routes = {
     "nodes": "nodes.html",
@@ -27,8 +27,6 @@ function updateUI() {
     let hasNavbar = pageSettings.hasAttribute("has-navbar");
     let hasBackButton = pageSettings.hasAttribute("has-back-button");
 
-    console.log(hasBackButton);
-
     navbar.style = "";
     backButton.style = "";
 
@@ -54,7 +52,11 @@ export function setTitle(title) {
     document.getElementById("index.titlebar.title").innerText = title;
 }
 
-export function refresh() {
+export function setBackButtonURL(url) {
+    document.getElementById("index.titlebar.back-button").href = url;
+}
+
+export function refreshPage() {
     if (currentRoute in scripts) scripts[currentRoute].refresh();
 }
 
@@ -68,9 +70,12 @@ export async function navigateTo(route) {
 
     let content = await fetchContent(filePath);
     let container = document.getElementById("index.page-container");
+    let navbar = document.getElementById("index.navbar");
 
     container.innerHTML = content;
     updateUI();
+
+    navbar.value = route;
 
     currentRoute = route;
     if (route in scripts) scripts[route].init();

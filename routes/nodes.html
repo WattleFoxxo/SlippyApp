@@ -21,8 +21,37 @@
         transform: translate(-50%, -50%);
         color: rgb(var(--mdui-color-on-surface-variant));
     }
+
+    .node-icon {
+        font-size: 16px;
+        vertical-align: middle;
+        line-height: 12px;
+    }
+
+    .node-description-item {
+        white-space: nowrap;
+        margin-right: 5px;
+    }
 </style>
 
 <div id="index.page-body" class="page-body">
+    <template id="nodes.node-list.template">
+        <mdui-list-item
+            id="_template.item"
+            icon="person"
+            end-icon="arrow_right"
+            fab-detach
+            href="#message?channel=${userId}"
+        >
+            <span id="_template.long-name">${longName}</span>
+            <mdui-badge id="_template.short-name" style="vertical-align: middle;">${shortName}</mdui-badge>
+            <span slot="description">
+                <span class="node-description-item"><mdui-icon id="_template.battery.icon" name="battery_unknown" class="node-icon"> </mdui-icon><span id="_template.battery">${batteryLevel}</span></span>
+                <span class="node-description-item"><mdui-icon id="_template.position.icon" name="location_on" class="node-icon"> </mdui-icon><a id="_template.position" style="color: #9e9eff;">${latitude}, ${longitude}</a></span>
+                <span class="node-description-item"><mdui-icon name="schedule" class="node-icon"></mdui-icon> <span id="_template.timestamp">${timestamp}</span></span>
+            </span>
+        </mdui-list-item>
+    </template>
+
     <mdui-list id="nodes.node-list"></mdui-list>
 </div>

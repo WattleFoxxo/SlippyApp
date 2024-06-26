@@ -53,7 +53,6 @@ export class Device {
 
 
     sendMessage(destination, message) {
-
         // Make sure we have an entry
         if (!(parseInt(destination) in this.messages)) this.messages[parseInt(destination)] = [];
         

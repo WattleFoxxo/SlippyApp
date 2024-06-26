@@ -1,5 +1,5 @@
-import { currentDevice, deviceStorage } from "../index.js";
-import { Logging } from "./utils.js";
+import { settingStorage, deviceStorage, globalDevice } from "../index.js";
+import { Logging, DeviceStatus } from "./utils.js";
 
 function appearanceTheme(value) {
     mdui.setTheme(value);
@@ -11,20 +11,37 @@ function appearanceColourTheme(value) {
 
 // Buttons
 
+// TODO: Make a connection manager
 function radioConnect() {
+    // TODO: Clean up
     let waitUntillSynced = (() => {
-        let progress = mdui.dialog({
+        let connectingProgress;
+        let syncingProgress;
+
+        connectingProgress = mdui.dialog({
             headline: "Connecting",
-            body: `<mdui-button loading variant="text" style="color: rgb(var(--mdui-color-on-surface));" full-width>Syncing with device.</mdui-button>`,
+            body: `<mdui-button loading variant="text" style="color: rgb(var(--mdui-color-on-surface));" full-width>Connecting to device.</mdui-button>`,
         });
 
-        currentDevice.connection.events.onFromRadio.subscribe((data) => {
-            if (data.payloadVariant.case) {
-                if (data.payloadVariant.case == "configCompleteId") {
-                    progress.open = false;
-                    document.getElementById("settings.radio.connect").getAttribute("disabled", true);
+        globalDevice.events.addEventListener("onStatus", (status) => {
+            switch(status) {
+                case DeviceStatus.Connected:
+                    if (connectingProgress.open == false) break;
+                    
+                    connectingProgress.open = false;
+
+                    syncingProgress = mdui.dialog({
+                        headline: "Connecting",
+                        body: `<mdui-button loading variant="text" style="color: rgb(var(--mdui-color-on-surface));" full-width>Syncing with device.</mdui-button>`,
+                    });
+            
+                    break
+                case DeviceStatus.Configured:
+                    syncingProgress.open = false;
+                    document.getElementById("settings.radio.connect").setAttribute("disabled", "true");
                     settingMap["radio.connect"].ui["disabled"] = true;
-                }
+
+                    break
             }
         });
     });
@@ -50,7 +67,7 @@ function radioConnect() {
                         let hostname = document.getElementById("address_box").value;
                         let tls = document.getElementById("tls_checkbox").checked;
 
-                        await currentDevice.connectHttp(hostname, 3000, false, tls);
+                        await globalDevice.connectHttp(hostname, 3000, false, tls);
 
                         waitUntillSynced();
                     },
@@ -88,11 +105,11 @@ function radioConnect() {
                             promptHttp();
                             break;
                         case "bluetooth":
-                            await currentDevice.connectBluetooth();
+                            await globalDevice.connectBluetooth();
                             waitUntillSynced();
                             break;
                         case "serial":
-                            await currentDevice.connectSerial();
+                            await globalDevice.connectSerial();
                             waitUntillSynced();
                             break;
                     }
@@ -279,7 +296,7 @@ export const settingMap = {
     },
 }
 
-export function initSettings(settingStorage) {      
+export function initSettings() {
     Object.entries(settingMap).forEach(([key, object]) => {
         if (object.onChange) {
             settingStorage.onSetItem.addEventListener(key, object.onChange);
