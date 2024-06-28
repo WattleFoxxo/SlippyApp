@@ -1,8 +1,8 @@
-import { Logging } from "../utils.js";
-import { registerScript } from "../router.js";
-import { settingStorage } from "../../index.js";
-import { settingMap } from "../settings_manager.js";
-import { VERSION } from "../definitions.js";
+import { Logging } from "../modules/utils.js";
+import { registerScript } from "../modules/router.js";
+import { settingStorage } from "../index.js";
+import { settingMap } from "../modules/settings_manager.js";
+import { VERSION } from "../modules/definitions.js";
 
 
 // god forgive me for this - WattleFoxxo

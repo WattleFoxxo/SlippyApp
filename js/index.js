@@ -1,31 +1,26 @@
-import * as router from "./modules/router.js";
-import { Device } from "./device.js";
-import { DeviceStatus, AppStorage } from "./modules/utils.js";
+import { MeshDevice } from "./modules/device.js";
+import { MessageManager } from "./modules/message.js";
+import { Router } from "./modules/router.js";
 
-import "./modules/routes/nodes.js"
-import "./modules/routes/channels.js"
-import "./modules/routes/message.js"
-import "./modules/routes/maps.js"
-import "./modules/routes/settings.js"
+import { NodesRoute } from "./routes/nodes.js";
+import { ChannelsRoute } from "./routes/channels.js";
+import { MessageRoute } from "./routes/message.js";
 
-export let globalDevice = new Device();
+let meshDevice = new MeshDevice();
+let messageManager = new MessageManager(meshDevice);
+let pageRouter = new Router();
 
-export let deviceStorage = new AppStorage("deviceStorage");
-export let settingStorage = new AppStorage("settingStorage");
+pageRouter.registerRoute(new NodesRoute(meshDevice));
+pageRouter.registerRoute(new ChannelsRoute(meshDevice));
+pageRouter.registerRoute(new MessageRoute(meshDevice, pageRouter, messageManager));
 
-import { initSettings } from "./modules/settings_manager.js";
-import { initSave, loadDevice } from "./modules/save_manager.js";
-import { initNoitif } from "./modules/notification_manager.js"
+meshDevice.connectHttp("192.168.0.58");
 
-initSettings();
-initNoitif();
-// initSave();
-// loadDevice();
+document.getElementById("index.quick-menu.refresh").addEventListener("click", () => pageRouter.refreshPage());
+document.getElementById("index.quick-menu.send1").addEventListener("click", () => messageManager.sendMessage("Hello World!", "broadcast", 1));
+document.getElementById("index.quick-menu.send2").addEventListener("click", () => messageManager.sendMessage("Hello World!", 3175757200, 0));
 
-document.getElementById("index.quick-menu.refresh").addEventListener("refresh", () => router.refreshPage());
-
-window.location.hash = "#nodes";
-router.navigateTo("nodes");
+pageRouter.navigateTo("nodes");
 
 if ("serviceWorker" in navigator) {
     await navigator.serviceWorker.register("service-worker.js", {

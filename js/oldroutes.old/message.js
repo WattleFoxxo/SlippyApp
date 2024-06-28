@@ -1,4 +1,3 @@
-import { XSSEncode, Logging } from "../utils.js";
 import { registerScript, setTitle, setBackButtonURL } from "../router.js";
 import { globalDevice } from "../../index.js";
 
@@ -100,7 +99,7 @@ export function init() {
 }
 
 export function refresh() {
-    var params = new URLSearchParams(`?${window.location.hash.split("?")[1]}`)
+    let params = new URLSearchParams(`?${window.location.hash.split("?")[1]}`)
     let channelId = parseInt(params.get("channel"));
 
     loadMessages(channelId);

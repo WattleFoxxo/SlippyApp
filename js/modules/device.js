@@ -1,19 +1,59 @@
-import * as subscribe from "./subscribe.js";
-import { deviceStorage } from "../index.js";
+import { CustomEvents } from "./utils/events.js";
+import { MessageStatusEnum } from "./utils/types.js";
 
-export class Device {
-    constructor(id) {
-        this.id = id;
-
+export class MeshDevice {
+    constructor() {
         this.client = new Meshtastic.Client();
         this.connection;
+        this.status = Meshtastic.Types.DeviceStatusEnum.DeviceDisconnected;
 
-        this.myNodeNum = 0;
-        this.nodes = {};
-        this.channels = {};
-        this.nodePositions = {};
+        this.myNodeNum;
+        this.nodes = new Map();
+        this.channels = new Map();
+        this.messages = new Map();
 
-        this.messages = {};
+        this.events = new CustomEvents();
+    }
+
+    setStatus(status) {
+        this.status = status;
+        this.events.dispatchEvent("onStatus", status);
+    }
+
+    setNode(node) {
+        console.log("onNode", node);
+
+        this.nodes.set(node.num, node);
+        this.events.dispatchEvent("onNode", node);
+    }
+
+    setChannel(channel) {
+        console.log("onChannel", channel);
+
+        this.channels.set(channel.index, channel);
+        this.events.dispatchEvent("onChannel", channel);
+    }
+
+    setMessage(message) {
+        console.log("onMessage", message);
+
+        let isDirect = (message.type == "direct");
+        let isSending = (message.from == this.myNodeNum);
+
+        let nodeId = isSending ? message.to : message.from;
+        let channel = isDirect ? nodeId : message.channel;
+        let messages = [];
+
+        if (this.messages.has(channel))
+            messages = this.messages.get(channel);
+
+        if (isSending)
+            message.status = MessageStatusEnum.Sending;
+
+        messages.push(message);
+
+        this.messages.set(channel, messages);
+        this.events.dispatchEvent("onMessage", message);
     }
 
     async connectHttp(address, fetchInterval = 3000, receiveBatchRequests = false, tls = false) {
@@ -26,7 +66,8 @@ export class Device {
             tls: tls
         });
 
-        subscribe.toAll(this);
+        this._subscribe();
+        this.events.dispatchEvent("onConnect");
     }
 
     async connectBluetooth() {
@@ -36,7 +77,8 @@ export class Device {
 
         if (ble_device) {
             await this.connection.connect(ble_device);
-            subscribe.toAll(this);
+            this._subscribe();
+            this.events.dispatchEvent("onConnect");
         }
     }
 
@@ -47,28 +89,20 @@ export class Device {
 
         if (port) {
             await this.connection.connect(port);
-            subscribe.toAll(this);
+            this._subscribe();
+            this.events.dispatchEvent("onConnect");
         }
     }
 
+    _subscribe() {
+        this.connection.events.onMyNodeInfo.subscribe((data) => this.myNodeNum = parseInt(data.myNodeNum));
+    
+        this.connection.events.onDeviceStatus.subscribe((data) => this.setStatus(data));
+        this.connection.events.onNodeInfoPacket.subscribe((data) => this.setNode(data));
+        this.connection.events.onChannelPacket.subscribe((data) => this.setChannel(data));
+        this.connection.events.onMessagePacket.subscribe((data) => this.setMessage(data));
 
-    sendMessage(destination, message) {
-        // Make sure we have an entry
-        if (!(parseInt(destination) in this.messages)) this.messages[parseInt(destination)] = [];
-        
-        this.messages[parseInt(destination)].push({
-            channel: 0,
-            data: message,
-            from: parseInt(this.myNodeNum),
-            to: parseInt(destination),
-            id: 0,
-            rxTime: new Date(),
-            type: "direct"
-        });
-
-        // THIS IS A VERY BAD IDEA! HACK!
-        deviceStorage.setItem("messages", JSON.stringify(this.messages));
-
-        this.connection.sendText(message, parseInt(destination));
+        this.connection.events.onMeshPacket.subscribe((data) => this.events.dispatchEvent("onMesh", data));
+        this.connection.events.onFromRadio.subscribe((data) => this.events.dispatchEvent("onRadio", data));
     }
 }
