@@ -14,13 +14,27 @@ pageRouter.registerRoute(new NodesRoute(meshDevice));
 pageRouter.registerRoute(new ChannelsRoute(meshDevice));
 pageRouter.registerRoute(new MessageRoute(meshDevice, pageRouter, messageManager));
 
-meshDevice.connectHttp("192.168.0.58");
+// meshDevice.connectHttp("192.168.0.58");
 
 document.getElementById("index.quick-menu.refresh").addEventListener("click", () => pageRouter.refreshPage());
-document.getElementById("index.quick-menu.send1").addEventListener("click", () => messageManager.sendMessage("Hello World!", "broadcast", 1));
-document.getElementById("index.quick-menu.send2").addEventListener("click", () => messageManager.sendMessage("Hello World!", 3175757200, 0));
+
+document.getElementById("index.quick-menu.send1").addEventListener("click", () => {
+    Notification.requestPermission();
+});
+
+document.getElementById("index.quick-menu.send2").addEventListener("click", () => {
+    navigator.serviceWorker.getRegistration().then((reg) => {
+        reg.showNotification("hello world");
+    });
+});
 
 pageRouter.navigateTo("nodes");
+
+// mdui.alert("The dev deployment is currently not functional! please use the main deployment.");
+mdui.alert({
+    headline: "Development",
+    description: "The dev deployment is currently not functional! please use the main deployment.",
+});
 
 if ("serviceWorker" in navigator) {
     await navigator.serviceWorker.register("service-worker.js", {
