@@ -1,10 +1,11 @@
 
-self.addEventListener("push", function(event) {
-    const options = {
-        body: event.data.text(),
-    };
+self.addEventListener('message', (event) => {
+    if (!event.data) return;
 
-    event.waitUntil(
-        self.registration.showNotification("Slippy", options)
-    );
+    switch (event.data.type) {
+        case "notification":
+            let notificationData = event.data.data;
+            self.registration.showNotification(notificationData.title, notificationData.options);
+            break
+    }
 });
