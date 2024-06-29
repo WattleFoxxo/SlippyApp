@@ -6,6 +6,7 @@ import { NotificationManager } from "./modules/notifications.js"
 import { NodesRoute } from "./routes/nodes.js";
 import { ChannelsRoute } from "./routes/channels.js";
 import { MessageRoute } from "./routes/message.js";
+import { MapsRoute } from "./routes/maps.js";
 
 let meshDevice = new MeshDevice();
 let messageManager = new MessageManager(meshDevice);
@@ -14,6 +15,7 @@ let notificationManager = new NotificationManager(meshDevice);
 
 pageRouter.registerRoute(new NodesRoute(meshDevice));
 pageRouter.registerRoute(new ChannelsRoute(meshDevice));
+pageRouter.registerRoute(new MapsRoute(meshDevice, pageRouter));
 pageRouter.registerRoute(new MessageRoute(meshDevice, pageRouter, messageManager));
 
 meshDevice.connectHttp("192.168.0.58");
