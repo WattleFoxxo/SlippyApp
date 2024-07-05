@@ -1,5 +1,6 @@
 import { CustomEvents } from "./utils/events.js";
 import { MessageStatusEnum } from "./utils/types.js";
+import { AppStorage } from "./utils/storage.js";
 
 export class MeshDevice {
     constructor() {
@@ -12,7 +13,35 @@ export class MeshDevice {
         this.channels = new Map();
         this.messages = new Map();
 
+        this.storage = new AppStorage("device");
         this.events = new CustomEvents();
+    }
+
+    init() {
+        if (this.storage.hasItem("nodes")) {
+            this.nodes = new Map(JSON.parse(this.storage.getItem("nodes")));
+        }
+
+        if (this.storage.hasItem("messages")) {
+            this.messages = new Map(JSON.parse(this.storage.getItem("messages")));
+        }
+
+        if (this.storage.hasItem("channels")) {
+            this.channels = new Map(JSON.parse(this.storage.getItem("channels")));
+        }
+
+
+        this.events.addEventListener("onNode", () => {
+            this.storage.setItem("nodes", JSON.stringify(Array.from(this.nodes.entries())));
+        });
+
+        this.events.addEventListener("onMessage", () => {
+            this.storage.setItem("messages", JSON.stringify(Array.from(this.messages.entries())));
+        });
+
+        this.events.addEventListener("onChannel", () => {
+            this.storage.setItem("channels", JSON.stringify(Array.from(this.channels.entries())));
+        });
     }
 
     setStatus(status) {

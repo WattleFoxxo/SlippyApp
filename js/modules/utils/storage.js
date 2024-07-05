@@ -18,6 +18,10 @@ export class AppStorage {
         return value;
     }
 
+    hasItem(key) {
+        return localStorage.hasOwnProperty(`${this.name}.${key}`);
+    }
+
     removeItem(key) {
         localStorage.removeItem(`${this.name}.${key}`);
         this.events.dispatchEvent(`${key}.onRemove`);

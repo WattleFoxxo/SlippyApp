@@ -50,7 +50,7 @@ export class MapsRoute extends Route {
         this.device.nodes.forEach((node, id) => {
             if (!this.hasLocationInfo(node)) return;
     
-            let nodeInfo = this.getNodeInfo(node);
+            let nodeInfo = this.getNodeInfo(node, id);
 
             let template = document.getElementById("maps.node.template");
             let newItem = template.content.cloneNode(true);
@@ -88,9 +88,9 @@ export class MapsRoute extends Route {
             let nodeIcon = L.divIcon({
                 className: "node-marker",
                 html: `<mdui-avatar src="data:image/png;base64,${icon}"></mdui-avatar>`,
-                iconSize:     [40, 40],
-                iconAnchor:   [20, 20],
-                popupAnchor:  [0, -20],
+                iconSize: [40, 40],
+                iconAnchor: [20, 20],
+                popupAnchor: [0, -20],
             });
     
             let marker = L.marker([nodeInfo.latitude, nodeInfo.longitude], {icon: nodeIcon}).addTo(map);
@@ -100,7 +100,7 @@ export class MapsRoute extends Route {
         });
     }
 
-    getNodeInfo(node) {
+    getNodeInfo(node, id) {
         let nodeInfo = {};
 
         if (this.hasUserInfo(node)) {

@@ -15,6 +15,76 @@
 
 <div id="index.page-body" class="page-body">
     <mdui-list id="settings.setting-list" class="settings-list">
-        <!-- <div><mdui-text-field id="settings.appearance.colour-theme" readonly end-icon="color_lens" label="Colour Theme" variant="outlined" value="#673ab7"></mdui-text-field></div> -->
+
+        <br><h2>&#xf027c Appearance</h2>
+
+        <!-- Theme settings -->
+        <div>
+            <mdui-select
+                id="settings.appearance.theme"
+                class="setting mdui-select-is-silly"
+                label="Theme"
+                variant="outlined"
+                end-icon="arrow_drop_down"
+                value="auto"
+            >
+                <mdui-menu-item value="auto">Auto</mdui-menu-item>
+                <mdui-menu-item value="light">Light</mdui-menu-item>
+                <mdui-menu-item value="dark">Dark</mdui-menu-item>
+            </mdui-select>
+        </div>
+
+        <!-- Colour settings -->
+        <div>
+            <mdui-text-field
+                id="settings.appearance.colour-theme"
+                class="setting"
+                readonly
+                end-icon="color_lens"
+                label="Colour Theme"
+                variant="outlined"
+                value="#673ab7"
+            ></mdui-text-field>
+        </div>
+
+        <br><h2>&#xf043b Radio</h2>
+
+        <!-- Connect radio -->
+        <div>
+            <mdui-button
+                id="settings.radio.connect"
+                class="setting"
+                variant="outlined"
+                full-width
+            >Connect</mdui-button>
+        </div>
+
+        <br><h2>&#xf0831 Other</h2>
+
+        <!-- About -->
+        <div>
+            <mdui-button
+                id="settings.other.about"
+                class="setting"
+                variant="outlined"
+                full-width
+            >About</mdui-button>
+        </div>
+
+        <!-- Debug -->
+        <div>
+            <mdui-button
+                id="settings.other.debug"
+                class="setting"
+                variant="outlined"
+                full-width
+                disabled
+            >Debug</mdui-button>
+        </div>
+
+        <br><div style="font-size: small; text-align: center;">
+            Slippy app version ${VERSION} <a href="https://github.com/WattleFoxxo/SlippyApp">Github</a>
+        </div>
+
     </mdui-list>
 </div>

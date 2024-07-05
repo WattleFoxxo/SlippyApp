@@ -21,9 +21,11 @@ export class ChannelsRoute extends Route {
         let channelList = document.getElementById("channels.channel-list");
         channelList.innerHTML = "";
 
-        if (this.device.status == Meshtastic.Types.DeviceStatusEnum.DeviceDisconnected) {
-            channelList.innerHTML = '<div class="empty-list">No channels are here yet,<br>Try connecting to a device.</div>';
-            return;
+        if (!this.device.channels.size) {
+            if (this.device.status == Meshtastic.Types.DeviceStatusEnum.DeviceDisconnected) {
+                channelList.innerHTML = '<div class="empty-list">No channels are here yet,<br>Try connecting to a device.</div>';
+                return;
+            }
         }
 
         this.device.channels.forEach((channel, id) => {

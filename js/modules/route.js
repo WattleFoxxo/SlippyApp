@@ -1,4 +1,3 @@
-
 export class Route {
     constructor(route, file) {
         this.route = route;

@@ -21,20 +21,20 @@ export class NodesRoute extends Route {
     displayNodes() {
         let nodeList = document.getElementById("nodes.node-list");
         nodeList.innerHTML = "";
-
-        if (this.device.status == Meshtastic.Types.DeviceStatusEnum.DeviceDisconnected) {
-            nodeList.innerHTML = '<div class="empty-list">No nodes are here yet,<br>Try connecting to a device.</div>';
-            return false;
-        }
     
         if (!this.device.nodes.size) {
+            if (this.device.status == Meshtastic.Types.DeviceStatusEnum.DeviceDisconnected) {
+                nodeList.innerHTML = '<div class="empty-list">No nodes are here yet,<br>Try connecting to a device.</div>';
+                return false;
+            }
+
             nodeList.innerHTML = '<div class="empty-list">No nodes are here yet.</div>';
             return false;
         }
 
         let nodes = this.sortNodes(this.device.nodes);
         nodes.forEach((node, id) => {
-            let nodeInfo = this.getNodeInfo(node);
+            let nodeInfo = this.getNodeInfo(node, id);
 
             let template = document.getElementById("nodes.node-list.template");
             let newItem = template.content.cloneNode(true);
@@ -74,7 +74,7 @@ export class NodesRoute extends Route {
         return new Map(nodesArray.map(obj => [obj.key, obj.value]));
     }
 
-    getNodeInfo(node) {
+    getNodeInfo(node, id) {
         let nodeInfo = {};
 
         if (this.hasUserInfo(node)) {
