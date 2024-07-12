@@ -32,9 +32,17 @@ export class NodesRoute extends Route {
             return false;
         }
 
+        let hasOthers = false;
         let nodes = this.sortNodes(this.device.nodes);
         nodes.forEach((node, id) => {
             let nodeInfo = this.getNodeInfo(node, id);
+
+            if (id === this.device.myNodeNum) {
+                this._createCatogory("Me", nodeList);
+            } else if (!hasOthers) {
+                this._createCatogory("Others", nodeList);
+                hasOthers = true;
+            }
 
             let template = document.getElementById("nodes.node-list.template");
             let newItem = template.content.cloneNode(true);
@@ -47,8 +55,12 @@ export class NodesRoute extends Route {
             let templateTimestamp = newItem.getElementById("_template.timestamp");
             let templatePosition = newItem.getElementById("_template.position");
             let templatePositionIcon = newItem.getElementById("_template.position.icon");
+            let templateDropdownMessage = newItem.getElementById("_template.dropdown.message");
+            let templateDropdownTraceroute = newItem.getElementById("_template.dropdown.traceroute");
+            
+            templateDropdownMessage.href = `#message?channel=${id}`;
+            templateDropdownTraceroute.addEventListener("click", () => this._traceRoute(id));
 
-            templateItem.href = `#message?channel=${id}`;
             templateLongName.innerText = nodeInfo.longName;
             templateShortName.innerText = nodeInfo.shortName;
             templateBattery.innerText = this.hasMetricsInfo(node) ? `${nodeInfo.batteryLevel}%` : "";
@@ -69,7 +81,16 @@ export class NodesRoute extends Route {
     sortNodes(nodes) {
         let nodesArray = Array.from(nodes, ([key, value]) => ({ key, value }));
 
-        nodesArray.sort((a, b) => b.value.lastHeard - a.value.lastHeard);
+        // nodesArray.sort((a, b) => b.value.lastHeard - a.value.lastHeard);
+        nodesArray.sort((a, b) => {
+            if (a.value.num == this.device.myNodeNum) {
+                return -1;
+            } else if (b.value.num == this.device.myNodeNum) {
+                return 1;
+            } else {
+                return b.value.lastHeard - a.value.lastHeard;
+            }
+        });
 
         return new Map(nodesArray.map(obj => [obj.key, obj.value]));
     }
@@ -114,5 +135,19 @@ export class NodesRoute extends Route {
 
     hasMetricsInfo(node) {
         return "deviceMetrics" in node;
+    }
+
+    _createCatogory(name, list) {
+        let template = document.getElementById("nodes.node-list.catagory.template");
+        let newCatagory = template.content.cloneNode(true);
+        let templateName = newCatagory.getElementById("_template.name");
+
+        templateName.innerText = name;
+
+        list.appendChild(newCatagory);
+    }
+
+    async _traceRoute(id) {
+        console.log(await this.device.connection.traceRoute(id));
     }
 }

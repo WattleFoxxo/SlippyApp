@@ -21,19 +21,23 @@ export class MessageRoute extends Route {
         let channelId = parseInt(parameters.channel);
         let channelName = "UNK";
 
+        if (this.device.status == Meshtastic.Types.DeviceStatusEnum.DeviceDisconnected) {
+            messageBox.setAttribute("disabled", true);
+        }
+
         if (channelId < 10) {
             let channel = this.device.channels.get(channelId);
             let name = channel.settings.name;
 
             channelName = (name.length > 0) ? name : "Public";
-            this.router.setBackUrl("#channels");
+            // this.router.setBackUrl("#channels");
         } else {
             let node = this.device.nodes.get(channelId);
 
             channelName = XSSEncode(`!${channelId.toString(16)}`);
             if ("user" in node) channelName = node.user.longName;
 
-            this.router.setBackUrl("#nodes");
+            // this.router.setBackUrl("#nodes");
         }
 
         this.router.setTitle(`Message ${channelName}`);

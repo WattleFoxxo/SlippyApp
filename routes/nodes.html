@@ -39,9 +39,7 @@
         <mdui-list-item
             id="_template.item"
             icon="person"
-            end-icon="arrow_right"
             fab-detach
-            href="#message?channel=${userId}"
         >
             <span id="_template.long-name">${longName}</span>
             <mdui-badge id="_template.short-name" style="vertical-align: middle;">${shortName}</mdui-badge>
@@ -50,7 +48,19 @@
                 <span class="node-description-item"><mdui-icon id="_template.position.icon" name="location_on" class="node-icon"> </mdui-icon><a id="_template.position" style="color: #9e9eff;">${latitude}, ${longitude}</a></span>
                 <span class="node-description-item"><mdui-icon name="schedule" class="node-icon"></mdui-icon> <span id="_template.timestamp">${timestamp}</span></span>
             </span>
+            
+            <mdui-dropdown slot="end-icon" style="line-height: var(--mdui-typescale-display-large-line-height);">
+                <mdui-button-icon icon="more_vert" slot="trigger"></mdui-button-icon>
+                <mdui-menu>
+                    <mdui-menu-item id="_template.dropdown.message">Message</mdui-menu-item>
+                    <mdui-menu-item id="_template.dropdown.traceroute">Traceroute</mdui-menu-item>
+                </mdui-menu>
+            </mdui-dropdown>
         </mdui-list-item>
+    </template>
+
+    <template id="nodes.node-list.catagory.template">
+        <mdui-list-subheader id="_template.name">${name}</mdui-list-subheader>
     </template>
 
     <mdui-list id="nodes.node-list"></mdui-list>

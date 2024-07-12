@@ -1,14 +1,20 @@
 import { MessageStatusEnum } from "./utils/types.js";
+import { getNodeInfo } from "./utils/user.js";
 
 export class MessageManager {
     constructor(device) {
         this.device = device;
 
         this.device.events.addEventListener("onMesh", (packet) => this._manageAck(packet));
+        this.device.events.addEventListener("onTrace", (packet) => this._manageTrace(packet));
     }
 
     sendMessage(text, destination="broadcast", channel=0) {
         this.device.connection.sendText(text, destination, true, channel);
+    }
+
+    traceRoute(id) {
+        this.device.connection.traceRoute(id);
     }
 
     _buildMessage(text, destination, channel, id) {
@@ -26,6 +32,39 @@ export class MessageManager {
             rxTime: new Date(),
             type: type,
         };
+    }
+
+    _manageTrace(packet) {
+        console.log(packet);
+        // {
+        //     "id": 1850873682,
+        //     "rxTime": "2024-07-06T07:51:45.000Z",
+        //     "type": "direct",
+        //     "from": 1003466463,
+        //     "to": 4241485080,
+        //     "channel": 0,
+        //     "data": {
+        //         "route": [
+        //             530597640,
+        //             2763164227
+        //         ]
+        //     }
+        // }
+
+        let routeString = "Traceroute: You > ";
+
+        packet.data.route.forEach((id) => {
+            let info = getNodeInfo(this.device.nodes.get(id));
+            routeString += `${info.longName} (${info.shortName}) > `;
+        });
+
+        let destInfo = getNodeInfo(this.device.nodes.get(packet.from));
+        routeString += `${destInfo.longName} (${destInfo.shortName})`
+
+        mdui.snackbar({
+            message: routeString,
+            action: "Ok",
+        });
     }
 
     _manageAck(packet) {

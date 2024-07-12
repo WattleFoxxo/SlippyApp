@@ -30,6 +30,9 @@ export class MeshDevice {
             this.channels = new Map(JSON.parse(this.storage.getItem("channels")));
         }
 
+        if (this.storage.hasItem("myNodeNum")) {
+            this.myNodeNum = parseInt(this.storage.getItem("myNodeNum"));
+        }
 
         this.events.addEventListener("onNode", () => {
             this.storage.setItem("nodes", JSON.stringify(Array.from(this.nodes.entries())));
@@ -41,6 +44,10 @@ export class MeshDevice {
 
         this.events.addEventListener("onChannel", () => {
             this.storage.setItem("channels", JSON.stringify(Array.from(this.channels.entries())));
+        });
+
+        this.events.addEventListener("onStatus", () => {
+            this.storage.setItem("myNodeNum", this.myNodeNum);
         });
     }
 
@@ -133,5 +140,6 @@ export class MeshDevice {
 
         this.connection.events.onMeshPacket.subscribe((data) => this.events.dispatchEvent("onMesh", data));
         this.connection.events.onFromRadio.subscribe((data) => this.events.dispatchEvent("onRadio", data));
+        this.connection.events.onTraceRoutePacket.subscribe((data) => this.events.dispatchEvent("onTrace", data));
     }
 }

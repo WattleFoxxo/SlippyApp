@@ -47,10 +47,14 @@ export class RadioConnectSetting extends Setting {
 
     _promptHttp() {
         let isSecure = (location.protocol === "https:");
-        let savedHostname = "meshtastic.local"
-        
+        let savedHostname = "meshtastic.local";
+
         if (this.settingsManager.hasItem("device.hostname")) {
             savedHostname = this.settingsManager.getItem("device.hostname");
+        }
+
+        if (this.settingsManager.hasItem("device.tls")) {
+            isSecure = (this.settingsManager.getItem("device.tls") === "true");
         }
 
         mdui.dialog({
@@ -72,6 +76,7 @@ export class RadioConnectSetting extends Setting {
                         let tls = document.getElementById("tls_checkbox").checked;
 
                         this.settingsManager.setItem("device.hostname", hostname);
+                        this.settingsManager.setItem("device.tls", tls);
                         await this.device.connectHttp(hostname, 3000, false, tls);
 
                         this._waitUntillSynced();

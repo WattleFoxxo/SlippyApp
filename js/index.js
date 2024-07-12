@@ -36,12 +36,18 @@ settingsManager.registerSetting(new AboutSetting());
 settingsManager.registerSetting(new DebugSetting());
 settingsManager.registerSetting(new RadioConnectSetting(meshDevice, settingsManager));
 
-// meshDevice.connectHttp("192.168.0.58");
-
 document.getElementById("index.quick-menu.refresh").addEventListener("click", () => pageRouter.refreshPage());
 
 settingsManager.init();
-pageRouter.navigateTo("nodes");
+pageRouter.navigateTo("messages");
+
+// let hasHost = settingsManager.hasItem("device.hostname");
+// let hasTLS = settingsManager.hasItem("device.tls");
+// if (hasHost && hasTLS) {
+//     let hostname = settingsManager.getItem("device.hostname");
+//     let tls = settingsManager.getItem("device.tls");
+//     device.connectHttp(hostname, 3000, false, tls);
+// }
 
 mdui.alert({
     headline: "Development",

@@ -1,5 +1,5 @@
 <div id="index.page-settings"
-    page-title="Channels"
+    page-title="Messages"
     has-navbar
 ></div>
 
@@ -12,6 +12,9 @@
         left: 50%;
         transform: translate(-50%, -50%);
         color: rgb(var(--mdui-color-on-surface-variant));
+    }
+    .channel-list h3 {
+        margin: 10px;
     }
 </style>
 
@@ -30,5 +33,9 @@
         </mdui-list-item>
     </template>
 
-    <mdui-list id="channels.channel-list"></mdui-list>
+    <template id="channels.channel-list.catagory.template">
+        <mdui-list-subheader id="_template.name">${name}</mdui-list-subheader>
+    </template>
+
+    <mdui-list id="channels.channel-list" class="channel-list"></mdui-list>
 </div>
