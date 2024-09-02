@@ -46,7 +46,7 @@ let hasTLS = settingsManager.hasItem("device.tls");
 if (hasHost && hasTLS) {
     let hostname = settingsManager.getItem("device.hostname");
     let tls = settingsManager.getItem("device.tls");
-    device.connectHttp(hostname, 3000, false, tls);
+    meshDevice.connectHttp(hostname, 3000, false, tls);
 }
 
 if ("serviceWorker" in navigator) {
