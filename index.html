@@ -12,20 +12,15 @@
         <script src="./js/libs/mdui.js"></script>
 
         <!-- Icons -->
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
 
         <!-- Libraries -->
         <script src="./js/libs/meshtastic.js"></script>
+        <script src="./js/libs/crypto-js.min.js"></script>
+        <script src="./js/libs/moment.min.js"></script>
         <script src="./js/libs/pnglib.js"></script>
         <script src="./js/libs/identicon.js"></script>
-        <script src="./js/libs/crypto-js.min.js"></script>
-        <script src="./js/libs/require.js"></script>
-        <script src="./js/libs/cookieManager.min.js"></script>
+        <!-- <script src="./js/libs/require.js"></script> -->
 
         <!-- Styles -->
         <link rel="stylesheet" href="./css/style.css">
@@ -44,9 +39,9 @@
         <div class="app-container">
 
             <!-- Title bar -->
-            <mdui-top-app-bar id="index/titlebar" class="app-bar">
-                <mdui-button-icon id="index/titlebar/back-button" icon="arrow_back"></mdui-button-icon>
-                <mdui-top-app-bar-title id="index/titlebar/title">Nodes</mdui-top-app-bar-title>
+            <mdui-top-app-bar id="index.titlebar" class="app-bar">
+                <mdui-button-icon id="index.titlebar.back-button" icon="arrow_back"></mdui-button-icon>
+                <mdui-top-app-bar-title id="index.titlebar.title">Nodes</mdui-top-app-bar-title>
                 
                 <div style="flex-grow: 1"></div>
                 
@@ -54,12 +49,12 @@
                 <mdui-dropdown>
                     <mdui-button-icon icon="more_vert" slot="trigger"></mdui-button-icon>
                     <mdui-menu>
-                        <mdui-menu-item id="index/quick-menu/refresh">Refresh</mdui-menu-item>
+                        <mdui-menu-item id="index.quick-menu.refresh">Refresh</mdui-menu-item>
                     </mdui-menu>
                 </mdui-dropdown>
             </mdui-top-app-bar>
 
-            <div id="index/page-container" class="app-content">
+            <div id="index.page-container" class="app-content">
                 <!-- 
                     Example page
 
@@ -77,20 +72,14 @@
             </div>
 
             <!-- Navbar -->
-            <mdui-navigation-bar id="index/navbar" class="app-bar" value="nodes">
+            <mdui-navigation-bar id="index.navbar" class="app-bar" value="nodes">
+                <mdui-navigation-bar-item icon="chat_bubble_outline" href="#messages" value="messages">Messages</mdui-navigation-bar-item>
                 <mdui-navigation-bar-item icon="workspaces" href="#nodes" value="nodes">Nodes</mdui-navigation-bar-item>
-                <mdui-navigation-bar-item icon="chat_bubble_outline" href="#channels" value="channels">Channels</mdui-navigation-bar-item>
                 <mdui-navigation-bar-item icon="map" href="#maps" value="maps">Maps</mdui-navigation-bar-item>
                 <mdui-navigation-bar-item icon="settings" href="#settings" value="settings">Settings</mdui-navigation-bar-item>
             </mdui-navigation-bar>
         </div>
 
         <script type="module" src="./js/index.js"></script>
-
-        <script>
-            if ("serviceWorker" in navigator) {
-                navigator.serviceWorker.register("./service-worker.js");
-            }
-        </script>
     </body>
 </html>

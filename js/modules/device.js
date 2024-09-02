@@ -1,18 +1,95 @@
-import * as subscribe from "./subscribe.js";
+import { CustomEvents } from "./utils/events.js";
+import { MessageStatusEnum } from "./utils/types.js";
+import { AppStorage } from "./utils/storage.js";
 
-export class Device {
-    constructor(id) {
-        this.id = id;
-
+export class MeshDevice {
+    constructor() {
         this.client = new Meshtastic.Client();
         this.connection;
+        this.status = Meshtastic.Types.DeviceStatusEnum.DeviceDisconnected;
 
-        this.myNodeNum = 0;
-        this.nodes = {};
-        this.channels = {};
-        this.nodePositions = {};
+        this.myNodeNum;
+        this.nodes = new Map();
+        this.channels = new Map();
+        this.messages = new Map();
 
-        this.messages = {};
+        this.storage = new AppStorage("device");
+        this.events = new CustomEvents();
+    }
+
+    init() {
+        if (this.storage.hasItem("nodes")) {
+            this.nodes = new Map(JSON.parse(this.storage.getItem("nodes")));
+        }
+
+        if (this.storage.hasItem("messages")) {
+            this.messages = new Map(JSON.parse(this.storage.getItem("messages")));
+        }
+
+        if (this.storage.hasItem("channels")) {
+            this.channels = new Map(JSON.parse(this.storage.getItem("channels")));
+        }
+
+        if (this.storage.hasItem("myNodeNum")) {
+            this.myNodeNum = parseInt(this.storage.getItem("myNodeNum"));
+        }
+
+        this.events.addEventListener("onNode", () => {
+            this.storage.setItem("nodes", JSON.stringify(Array.from(this.nodes.entries())));
+        });
+
+        this.events.addEventListener("onMessage", () => {
+            this.storage.setItem("messages", JSON.stringify(Array.from(this.messages.entries())));
+        });
+
+        this.events.addEventListener("onChannel", () => {
+            this.storage.setItem("channels", JSON.stringify(Array.from(this.channels.entries())));
+        });
+
+        this.events.addEventListener("onStatus", () => {
+            this.storage.setItem("myNodeNum", this.myNodeNum);
+        });
+    }
+
+    setStatus(status) {
+        this.status = status;
+        this.events.dispatchEvent("onStatus", status);
+    }
+
+    setNode(node) {
+        console.log("onNode", node);
+
+        this.nodes.set(node.num, node);
+        this.events.dispatchEvent("onNode", node);
+    }
+
+    setChannel(channel) {
+        console.log("onChannel", channel);
+
+        this.channels.set(channel.index, channel);
+        this.events.dispatchEvent("onChannel", channel);
+    }
+
+    setMessage(message) {
+        console.log("onMessage", message);
+
+        let isDirect = (message.type == "direct");
+        let isSending = (message.from == this.myNodeNum);
+
+        let nodeId = isSending ? message.to : message.from;
+        let channel = isDirect ? nodeId : message.channel;
+        let messages = [];
+
+        if (this.messages.has(channel))
+            messages = this.messages.get(channel);
+
+        if (isSending)
+            message.status = MessageStatusEnum.Sending;
+
+        messages.push(message);
+
+        this.messages.set(channel, messages);
+        this.events.dispatchEvent("onMessage", message);
     }
 
     async connectHttp(address, fetchInterval = 3000, receiveBatchRequests = false, tls = false) {
@@ -25,7 +102,8 @@ export class Device {
             tls: tls
         });
 
-        subscribe.toAll(this);
+        this._subscribe();
+        this.events.dispatchEvent("onConnect");
     }
 
     async connectBluetooth() {
@@ -35,7 +113,8 @@ export class Device {
 
         if (ble_device) {
             await this.connection.connect(ble_device);
-            subscribe.toAll(this);
+            this._subscribe();
+            this.events.dispatchEvent("onConnect");
         }
     }
 
@@ -46,27 +125,21 @@ export class Device {
 
         if (port) {
             await this.connection.connect(port);
-            subscribe.toAll(this);
+            this._subscribe();
+            this.events.dispatchEvent("onConnect");
         }
     }
 
+    _subscribe() {
+        this.connection.events.onMyNodeInfo.subscribe((data) => this.myNodeNum = parseInt(data.myNodeNum));
+    
+        this.connection.events.onDeviceStatus.subscribe((data) => this.setStatus(data));
+        this.connection.events.onNodeInfoPacket.subscribe((data) => this.setNode(data));
+        this.connection.events.onChannelPacket.subscribe((data) => this.setChannel(data));
+        this.connection.events.onMessagePacket.subscribe((data) => this.setMessage(data));
 
-    sendMessage(destination, message) {
-
-        // Make sure we have an entry
-        if (!(destination in this.messages)) this.messages[destination] = [];
-        
-        this.messages[destination].push({
-            channel: 0,
-            data: message,
-            from: parseInt(this.myNodeNum),
-            to: parseInt(destination),
-            id: 0,
-            rxTime: new Date(),
-            type: "direct"
-        });
-
-
-        this.connection.sendText(message, destination);
+        this.connection.events.onMeshPacket.subscribe((data) => this.events.dispatchEvent("onMesh", data));
+        this.connection.events.onFromRadio.subscribe((data) => this.events.dispatchEvent("onRadio", data));
+        this.connection.events.onTraceRoutePacket.subscribe((data) => this.events.dispatchEvent("onTrace", data));
     }
 }

@@ -1,52 +1,56 @@
-import { navigateTo, refresh } from "./modules/router.js";
-import { Device } from "./modules/device.js";
-import { Logging } from "./modules/definitions.js";
+import { MeshDevice } from "./modules/device.js";
+import { MessageManager } from "./modules/message.js";
+import { Router } from "./modules/router.js";
+import { NotificationManager } from "./modules/notifications.js";
+import { AppStorage } from "./modules/utils/storage.js";
+import { SettingsManager, Setting } from "./modules/settings.js";
 
-/* Routes */
-import "./modules/routes/nodes.js"
-import "./modules/routes/message.js"
-import "./modules/routes/channels.js"
-import "./modules/routes/maps.js"
-import "./modules/routes/settings.js"
+import { NodesRoute } from "./routes/nodes.js";
+import { ChannelsRoute } from "./routes/channels.js";
+import { MessageRoute } from "./routes/message.js";
+import { MapsRoute } from "./routes/maps.js";
+import { SettingsRoute } from "./routes/settings.js";
 
-export let currentDevice = new Device(0);
+import { ThemeSetting } from "./modules/settings/mduiSettings.js";
+import { ColourThemeSetting } from "./modules/settings/mduiSettings.js";
+import { AboutSetting, DebugSetting } from "./modules/settings/otherSettings.js";
+import { RadioConnectSetting } from "./modules/settings/radioConnectSetting.js";
 
-export function refreshPage() {
-    refresh();
+let meshDevice = new MeshDevice();
+let messageManager = new MessageManager(meshDevice);
+let pageRouter = new Router();
+let notificationManager = new NotificationManager(meshDevice);
+let settingsManager = new SettingsManager("settings");
+
+meshDevice.init();
+
+pageRouter.registerRoute(new NodesRoute(meshDevice));
+pageRouter.registerRoute(new ChannelsRoute(meshDevice));
+pageRouter.registerRoute(new MapsRoute(meshDevice, pageRouter));
+pageRouter.registerRoute(new MessageRoute(meshDevice, pageRouter, messageManager));
+pageRouter.registerRoute(new SettingsRoute(settingsManager));
+
+settingsManager.registerSetting(new ThemeSetting());
+settingsManager.registerSetting(new ColourThemeSetting());
+settingsManager.registerSetting(new AboutSetting());
+settingsManager.registerSetting(new DebugSetting());
+settingsManager.registerSetting(new RadioConnectSetting(meshDevice, settingsManager));
+
+document.getElementById("index.quick-menu.refresh").addEventListener("click", () => pageRouter.refreshPage());
+
+settingsManager.init();
+pageRouter.navigateTo("messages");
+
+let hasHost = settingsManager.hasItem("device.hostname");
+let hasTLS = settingsManager.hasItem("device.tls");
+if (hasHost && hasTLS) {
+    let hostname = settingsManager.getItem("device.hostname");
+    let tls = settingsManager.getItem("device.tls");
+    meshDevice.connectHttp(hostname, 3000, false, tls);
 }
 
-window.addEventListener("load", () => {
-    // if (location.protocol === "https:" && !checkCookie("ignore-https-warn")) {
-    //     mdui.dialog({
-    //         headline: "Hold up!",
-    //         body: `
-    //         <span>It looks like you're using a secure context.<br>
-    //         This might cause issues if your node doesn't have TLS enabled.<br><br>
-    //         Learn more about that <a href="https://github.com/WattleFoxxo/SlippyApp/blob/main/README.md">here</a>.<span>
-    //         `,
-    //         actions: [
-    //             {
-    //                 text: "Don't show again",
-    //                 onClick: () => setCookie("ignore-https-warn", true, 256),
-    //             },
-    //             {
-    //                 text: "Acknowledge"
-    //             }
-    //         ]
-    //     });
-    // }
-});
-
-/* Quick menu */
-
-document.getElementById("index/quick-menu/refresh").addEventListener("click", () => {
-    refreshPage();
-});
-
-/*  */
-
-window.location.hash = "#nodes";
-navigateTo(window.location.hash.slice(1).split("?")[0]);
-
-console.log(Logging.info, "Meshtastic:", Meshtastic);
-console.log(Logging.info, "Current device:", currentDevice);
+if ("serviceWorker" in navigator) {
+    await navigator.serviceWorker.register("service-worker.js", {
+        type: "module",
+    });
+}

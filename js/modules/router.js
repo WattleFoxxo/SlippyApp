@@ -1,82 +1,113 @@
-import { Logging } from "./definitions.js";
+import { Route } from "./route.js";
 
-const routes = {
-    "nodes": "nodes.html",
-    "channels": "channels.html",
-    "maps": "maps.html",
-    "message": "message.html",
-    "settings":"settings.html",
-};
+export class Router {
+    constructor() {
+        this.routes = new Map();
 
-let scripts = {};
-let currentRoute = "";
-
-export function registerScript(route, init, refresh) {
-    scripts[route] = {
-        "init": init,
-        "refresh": refresh
-    };
-}
-
-function updateUI() {
-    let title = document.getElementById("index/titlebar/title");
-    let navbar = document.getElementById("index/navbar");
-    let backButton = document.getElementById("index/titlebar/back-button");
-    let pageSettings = document.getElementById("index/page-settings");
-
-    let hasNavbar = pageSettings.hasAttribute("has-navbar");
-    let hasBackButton = pageSettings.hasAttribute("has-back-button");
-
-    console.log(hasBackButton);
-
-    navbar.style = "";
-    backButton.style = "";
-
-    if (!hasNavbar) navbar.style = "display: none;";
-    if (!hasBackButton) backButton.style = "display: none;";
-
-    backButton.href = pageSettings.getAttribute("back-button-url");
-    title.innerText = pageSettings.getAttribute("page-title");
-}
-
-async function fetchContent(filePath) {
-    let response = await fetch(`./routes/${filePath}`);
-
-    if (!response.ok) {
-        console.log(Logging.error, "Failed to fetch HTML content");
-        return "<h2>Failed to fetch HTML content, try restarting or reinstalling slippy.</h2>";
+        window.addEventListener("hashchange", (event) => this._handelHashChange());
     }
 
-    return await response.text();
-}
+    registerRoute(route) {
+        let newInfo = {
+            file: route.file,
+            init: () => route.init(),
+            refresh: () => route.refresh(),
+        }
 
-export function setTitle(title) {
-    document.getElementById("index/titlebar/title").innerText = title;
-}
-
-export function refresh() {
-    if (currentRoute in scripts) scripts[currentRoute].refresh();
-}
-
-export async function navigateTo(route) {
-    console.log(Logging.info, "loading route:", route);
-
-    let filePath = routes[route];
-    if (!filePath) {
-        return navigateTo("nodes");
+        this.routes.set(route.route, newInfo);
     }
 
-    let content = await fetchContent(filePath);
-    let container = document.getElementById("index/page-container");
+    refreshPage() {
+        let routeInfo = this._tryGetRoute(this._getRoute());
+        if (!routeInfo) return; // This should never happen
 
-    container.innerHTML = content;
-    updateUI();
+        routeInfo.refresh();
+    }
 
-    currentRoute = route;
-    if (route in scripts) scripts[route].init();
+    setTitle(title) {
+        document.getElementById("index.titlebar.title").innerText = title;
+    }
+
+    setBackUrl(url) {
+        document.getElementById("index.titlebar.back-button").href = url;
+    }
+
+    getParameters() {
+        let query = window.location.hash.slice(1).split("?")[1];
+        let params = new URLSearchParams(query);
+        let queryParams = {};
+        
+        params.forEach((value, key) => queryParams[key] = value);
+        
+        return queryParams;
+    }
+
+    async navigateTo(route) {
+        let routeInfo = this._tryGetRoute(route);
+        if (!routeInfo) return this.navigateTo("nodes");
+
+        let routeContent = await this._fetchHtmlContent(routeInfo.file);
+
+        let container = document.getElementById("index.page-container");
+        let navbar = document.getElementById("index.navbar");
+
+        container.innerHTML = routeContent;
+        navbar.value = route;
+
+        this._setRoute(route);
+        this._updateUserInterface();
+
+        routeInfo.init();
+    }
+
+    async _fetchHtmlContent(file) {
+        let response = await fetch(`/routes/${file}`);
+
+        if (!response.ok) {
+            console.error("Failed to fetch HTML content.");
+            return "<h2>Failed to load, try restarting or reinstalling the app.</h2>";
+        }
+
+        return await response.text();
+    }
+
+    _getRoute() {
+        return window.location.hash.slice(1).split("?")[0];
+    }
+
+    _setRoute(route) {
+        let hash = window.location.hash.slice(1).split("?");
+        hash[0] = route;
+        window.location.hash = `#${hash.join("?")}`;
+    }
+
+    _tryGetRoute(route) {
+        if (this.routes.has(route))
+            return this.routes.get(route);
+        
+        return null;
+    }
+
+    _updateUserInterface() {
+        let title = document.getElementById("index.titlebar.title");
+        let navbar = document.getElementById("index.navbar");
+        let backButton = document.getElementById("index.titlebar.back-button");
+        let pageSettings = document.getElementById("index.page-settings");
+
+        let hasNavbar = pageSettings.hasAttribute("has-navbar");
+        let hasBackButton = pageSettings.hasAttribute("has-back-button");
+
+        navbar.style = "";
+        backButton.style = "";
+
+        if (!hasNavbar) navbar.style = "display: none;";
+        if (!hasBackButton) backButton.style = "display: none;";
+
+        backButton.href = pageSettings.getAttribute("back-button-url");
+        title.innerText = pageSettings.getAttribute("page-title");
+    }
+
+    _handelHashChange() {
+        this.navigateTo(this._getRoute());
+    }
 }
-
-window.addEventListener("hashchange", (event) => {
-    let route = window.location.hash.slice(1).split("?")[0];
-    navigateTo(route);
-});
